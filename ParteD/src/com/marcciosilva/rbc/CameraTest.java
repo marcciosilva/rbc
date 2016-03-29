@@ -13,14 +13,6 @@ public class CameraTest {
 
 	public static void main(String[] args) {
 		
-		int MAGENTA = 1;
-		int BLUE = 2;
-		int GREEN = 3;
-		int RED = 4;
-		int YELLOW = 5;
-		int BLACK = 6;
-		
-		
 		NXTCam cam = new NXTCam(SensorPort.S1);
 		cam.enableTracking(true);
 		int objNum = 0;
@@ -35,7 +27,29 @@ public class CameraTest {
 			LCD.drawString("Amount = " + Integer.toString(objNum), 0, 0);
 			for (int i = 0 ; i <= 8 ; i++){
 				String obj = "";
-				obj = obj + Integer.toString(cam.getObjectColor(objNum)) + " ";
+				int objId = cam.getObjectColor(objNum);
+				String color = "";
+				switch (objId){
+				case 1:
+					color = "MAGENTA";
+					break;
+				case 2:
+					color = "BLUE";
+					break;
+				case 3:
+					color = "GREEN";
+					break;
+				case 4:
+					color = "RED";
+					break;
+				case 5:
+					color = "YELLOW";
+					break;
+				case 6:
+					color = "BLACK";
+					break;
+				}
+				obj = obj + color + " ";
 				Rectangle rect = cam.getRectangle(objNum);
 				float x = rect.x + rect.width / 2f;
 				float y = rect.y - rect.height / 2f;
