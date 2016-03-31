@@ -15,6 +15,7 @@ public class UltrasonicTest {
 				LCD.drawInt(sensor.getDistance(), 0, 0);
 			} else if (sensor.getMode() == UltrasonicSensor.MODE_PING) {
 				sensor.ping();
+				Delay.msDelay(20);
 				int[] distances = new int[8];
 				if (sensor.getDistances(distances) > 0) {
 					int i = 0;
@@ -31,10 +32,9 @@ public class UltrasonicTest {
 			}
 
 			if ((Button.readButtons() & Button.ID_ENTER) == Button.ID_ENTER) {
-				if (sensor.getMode() == UltrasonicSensor.MODE_CONTINUOUS)
-					sensor.setMode(UltrasonicSensor.MODE_PING);
-				else
-					sensor.continuous();
+				if (sensor.getMode() == UltrasonicSensor.MODE_CONTINUOUS) sensor
+						.setMode(UltrasonicSensor.MODE_PING);
+				else sensor.continuous();
 			}
 
 			LCD.clear();
