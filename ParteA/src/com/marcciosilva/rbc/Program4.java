@@ -10,22 +10,6 @@ public class Program4 {
 	public static void main(String[] args) {
 		LCD.drawString("Programa 4", 0, 0);
 		Button.waitForAnyPress();
-		// se inicializa thread que chequea botones
-		new Thread() {
-			boolean running = true;
-
-			@Override
-			public void run() {
-				while (running) {
-					if (Motor.A.isMoving() && Button.readButtons() > 0)
-						Motor.A.stop();
-					else
-						// fin del thread
-						running = false;
-				}
-			}
-
-		}.start();
 		Motor.A.rotate(4 * 360, true);
 		Delay.msDelay(300);
 		while (Motor.A.isMoving()) {
@@ -33,6 +17,8 @@ public class Program4 {
 			// se limpia la pantalla para sobreescribir
 			LCD.clear(1);
 			LCD.drawInt(Motor.A.getTachoCount(), 0, 1);
+			if (Button.readButtons() > 0)
+				Motor.A.stop();
 		}
 		LCD.drawInt(Motor.A.getTachoCount(), 0, 2);
 		Button.waitForAnyPress();
