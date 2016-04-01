@@ -101,7 +101,6 @@ public class ColorSensorTest {
 				break;
 			case 0:
 				int luz = sensor.getNormalizedLightValue(); // (0..1024)
-				LCD.drawInt(luz, 0, 7);
 				int r_aux;
 				int g_aux;
 				int b_aux;
