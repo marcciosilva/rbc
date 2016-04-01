@@ -14,19 +14,16 @@ public class CameraTest {
 
 		NXTCam cam = new NXTCam(SensorPort.S1);
 		cam.enableTracking(true);
-		int objNum = 0;
 		while (true) {
 			if ((Button.readButtons() & Button.ID_ESCAPE) == Button.ID_ESCAPE) {
 				cam.enableTracking(false);
 				break;
 			}
 			Delay.msDelay(1000); // espero para pollear la camara
-			objNum = cam.getNumberOfObjects();
 			LCD.clear();
-			LCD.drawString("Amount = " + Integer.toString(objNum), 0, 0);
 			for (int i = 0; i <= 8; i++) {
 				String obj = "";
-				int objId = cam.getObjectColor(objNum);
+				int objId = cam.getObjectColor(i) + 1;
 				String color = "";
 				switch (objId) {
 				case 1:
@@ -52,11 +49,13 @@ public class CameraTest {
 					break;
 				}
 				obj = obj + color + " ";
-				Rectangle rect = cam.getRectangle(objNum);
-				float x = rect.x + rect.width / 2f;
-				float y = rect.y - rect.height / 2f;
-				obj = obj + "(" + Integer.toString((int) x) + ", " + Integer.toString((int) y) + ")";
-				LCD.drawString(obj, 0, i + 1);
+				if (!color.equals("NONE")) {
+					Rectangle rect = cam.getRectangle(objId - 1);
+					float x = rect.x + rect.width / 2f;
+					float y = rect.y - rect.height / 2f;
+					obj = obj + "(" + Integer.toString(Math.round(x)) + ", " + Integer.toString(Math.round(y)) + ")";
+					LCD.drawString(obj, 0, i);
+				}
 			}
 		}
 	}
