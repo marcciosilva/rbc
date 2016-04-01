@@ -9,7 +9,7 @@ import lejos.util.Delay;
 public class LightTest {
 
 	public static void main(String[] args) {
-		ColorSensor sensor = new ColorSensor(SensorPort.S1);
+		final ColorSensor sensor = new ColorSensor(SensorPort.S1);
 		ButtonListener listener = new ButtonListener() {
 			boolean floodlight = true;
 
