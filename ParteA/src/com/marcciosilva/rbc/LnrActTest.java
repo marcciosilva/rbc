@@ -10,7 +10,7 @@ public class LnrActTest {
 
 	public static void main(String[] args) {
 
-		LinearActuator actuator = new LnrActrFirgelliNXT(MotorPort.A);
+		final LinearActuator actuator = new LnrActrFirgelliNXT(MotorPort.A);
 		Button.LEFT.addButtonListener(new ButtonListener() {
 			@Override
 			public void buttonReleased(Button b) {
