@@ -16,7 +16,9 @@ public class ColorSensorTest {
 	}
 
 	public static void main(String[] args) {
-		ColorSensor sensor = new ColorSensor(SensorPort.S1);
+		int rgbs[][] = { { 0, 0, 0 }, { 200, 50, 100 }, { 0, 0, 0 } };
+
+		final ColorSensor sensor = new ColorSensor(SensorPort.S1);
 
 		Button.LEFT.addButtonListener(new ButtonListener() {
 			boolean calibradoLow = false;
@@ -71,7 +73,6 @@ public class ColorSensorTest {
 			}
 		});
 
-		boolean floodlight = true;
 		while (true) {
 			ColorSensor.Color color = sensor.getColor();
 			for (int i = 0; i < 4; i++)
@@ -84,37 +85,55 @@ public class ColorSensorTest {
 			int r = color.getRed();
 			int g = color.getGreen();
 			int b = color.getBlue();
-			if (inRange(r, 200) && inRange(g, 50) && inRange(b, 100)) {
-				strColor = "MAGENTA";
-			} else {
-				switch (color.getColor()) {
-				case 7:
-					strColor = "BLACK";
-					break;
-				case 2:
-					strColor = "BLUE";
-					break;
-				case 1:
-					strColor = "GREEN";
-					break;
-				case 3:
-					strColor = "YELLOW";
-					break;
-				case 0:
-					strColor = "RED";
-					break;
-				case 4:
-					strColor = "MAGENTA";
-					break;
-				case 6:
-					strColor = "WHITE";
-					break;
-				default:
-					if (((inRange(g, 0)) || (!inRange(g, 0) && inRange(r, 255) && inRange(b, 255)))
-							&& Math.abs(r - b) <= error)
-						strColor = "MAGENTA";
-					break;
+
+			switch (color.getColor()) {
+			case 7:
+				strColor = "BLACK";
+				break;
+			case 2:
+				strColor = "BLUE";
+				break;
+			case 1:
+				strColor = "GREEN";
+				break;
+			case 3:
+				strColor = "YELLOW";
+				break;
+			case 0:
+				int luz = sensor.getLightValue();
+				int pos;
+				// Luz baja
+				if (luz > 0 && luz < 33) {
+					pos = 0;
 				}
+				// Luz media
+				else if (luz >= 33 && luz < 66) {
+					pos = 1;
+				}
+				// Luz alta
+				else {
+					pos = 2;
+				}
+
+				if (inRange(r, rgbs[pos][0]) && inRange(g, rgbs[pos][0])
+						&& inRange(b, rgbs[pos][0])) {
+					strColor = "MAGENTA";
+				} else
+					strColor = "RED";
+
+				break;
+			case 4:
+				strColor = "MAGENTA";
+				break;
+			case 6:
+				strColor = "WHITE";
+				break;
+			default:
+				if (((inRange(g, 0)) || (!inRange(g, 0) && inRange(r, 255) && inRange(
+						b, 255))) && Math.abs(r - b) <= error)
+					strColor = "MAGENTA";
+				break;
+
 			}
 			LCD.clear(6);
 			LCD.drawString(strColor, 0, 6);
