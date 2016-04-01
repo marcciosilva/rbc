@@ -8,7 +8,7 @@ import lejos.util.Delay;
 
 public class ColorSensorTest {
 
-	public static int error = 15;
+	public static int error = 50;
 
 	public static boolean inRange(int value, int reference) {
 		// true if value is in range of reference
@@ -16,7 +16,7 @@ public class ColorSensorTest {
 	}
 
 	public static void main(String[] args) {
-		int rgbs[][] = { { 0, 0, 0 }, { 200, 50, 100 }, { 0, 0, 0 } };
+		int rgbs[][] = { { 0, 0, 0 }, { 200, 60, 100 } };
 
 		final ColorSensor sensor = new ColorSensor(SensorPort.S1);
 
@@ -100,26 +100,27 @@ public class ColorSensorTest {
 				strColor = "YELLOW";
 				break;
 			case 0:
-				int luz = sensor.getLightValue();
-				int pos;
-				// Luz baja
-				if (luz > 0 && luz < 33) {
-					pos = 0;
-				}
-				// Luz media
-				else if (luz >= 33 && luz < 66) {
-					pos = 1;
-				}
-				// Luz alta
-				else {
-					pos = 2;
+				int luz = sensor.getNormalizedLightValue(); // (0..1024)
+				LCD.drawInt(luz, 0, 7);
+				int r_aux;
+				int g_aux;
+				int b_aux;
+
+				if (luz < 300) {
+					r_aux = 200;
+					g_aux = 50;
+					b_aux = 100;
+				} else {
+					r_aux = 100;
+					g_aux = 25;
+					b_aux = 40;
 				}
 
-				if (inRange(r, rgbs[pos][0]) && inRange(g, rgbs[pos][0])
-						&& inRange(b, rgbs[pos][0])) {
+				if (inRange(r, r_aux) && inRange(g, g_aux) && inRange(b, b_aux)) {
 					strColor = "MAGENTA";
-				} else
+				} else {
 					strColor = "RED";
+				}
 
 				break;
 			case 4:
