@@ -5,6 +5,8 @@
 
 # Package Files #
 *.jar
+!simbad-1.4.jar
+!simbad-javadocs.jar
 *.war
 *.ear
 
