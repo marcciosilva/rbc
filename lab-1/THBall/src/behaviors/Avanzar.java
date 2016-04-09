@@ -8,7 +8,7 @@ public class Avanzar implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		return !THBall.girando;
+		return true;
 	}
 
 	@Override
