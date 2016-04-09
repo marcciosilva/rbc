@@ -8,7 +8,7 @@ public class Avanzar implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		return true;
+		return !THBall.girando;
 	}
 
 	@Override
@@ -22,6 +22,8 @@ public class Avanzar implements Behavior {
 
 	@Override
 	public void suppress() {
+		THBall.leftMotor.stop();
+		THBall.rightMotor.stop();
 	}
 
 }
