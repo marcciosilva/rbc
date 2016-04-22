@@ -61,7 +61,6 @@ public class THBall {
 		} catch (IOException ioe) {
 			LCD.clear();
 			LCD.drawString("Conn Failed", 0, 0);
-			Button.waitForAnyPress();
 			System.exit(1);
 		}
 		pinzaDer = nxt.C;
@@ -70,6 +69,8 @@ public class THBall {
 
 		LCD.drawString("Presione algun boton", 0, 0);
 		Button.waitForAnyPress();
+
+		inicializar();
 		// seteo sensor a modo continuo para no tener que
 		// mandar pings manualmente
 		ultrasonicSensor.continuous();
@@ -226,6 +227,14 @@ public class THBall {
 
 	public static void exit() {
 		nxt.close();
+	}
+
+	public static void inicializar() {
+		pinzaIzq.resetTachoCount();
+		pinzaDer.resetTachoCount();
+		catapulta.resetTachoCount();
+		pinzaIzq.rotateTo(-100);
+		pinzaDer.rotateTo(-100);
 	}
 
 }
