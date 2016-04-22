@@ -1,5 +1,7 @@
 package main;
 
+import java.io.IOException;
+
 import behaviors.Avanzar;
 import behaviors.Avoid;
 import lejos.nxt.Button;
@@ -9,6 +11,10 @@ import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
+import lejos.nxt.comm.Bluetooth;
+import lejos.nxt.comm.NXTCommConnector;
+import lejos.nxt.remote.RemoteMotor;
+import lejos.nxt.remote.RemoteNXT;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 
@@ -29,8 +35,12 @@ public class THBall {
 	public static boolean originalFacing = false;
 
 	// actuadores
+	static RemoteNXT nxt;
 	public static NXTRegulatedMotor leftMotor = Motor.A;
 	public static NXTRegulatedMotor rightMotor = Motor.C;
+	public static RemoteMotor pinzaDer;
+	public static RemoteMotor pinzaIzq;
+	public static RemoteMotor catapulta;
 	// sensores
 	public static UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(SensorPort.S4);
 	public static CompassHTSensor compass = new CompassHTSensor(SensorPort.S1);
@@ -39,7 +49,23 @@ public class THBall {
 	public static float conversionAngles = 11.6f / 2f;
 
 	public static void main(String[] args) {
-		// RConsole.open();
+
+		try {
+			LCD.drawString("Connecting...", 0, 0);
+			NXTCommConnector connector = Bluetooth.getConnector();
+			nxt = new RemoteNXT("rbc4_2", connector);
+			LCD.clear();
+			LCD.drawString("Connected", 0, 0);
+		} catch (IOException ioe) {
+			LCD.clear();
+			LCD.drawString("Conn Failed", 0, 0);
+			Button.waitForAnyPress();
+			System.exit(1);
+		}
+		pinzaDer = nxt.C;
+		pinzaIzq = nxt.A;
+		catapulta = nxt.B;
+
 		LCD.drawString("Presione algun boton", 0, 0);
 		Button.waitForAnyPress();
 		// seteo sensor a modo continuo para no tener que
