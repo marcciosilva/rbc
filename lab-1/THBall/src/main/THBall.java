@@ -11,6 +11,7 @@ import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
+import lejos.nxt.addon.NXTCam;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTCommConnector;
 import lejos.nxt.remote.RemoteMotor;
@@ -44,6 +45,7 @@ public class THBall {
 	// sensores
 	public static UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(SensorPort.S4);
 	public static CompassHTSensor compass = new CompassHTSensor(SensorPort.S1);
+	public static NXTCam camera = new NXTCam(SensorPort.S2);
 	// public static float anguloOriginal = 0.0f;
 	// conversion de clicks del tacometro a grados
 	public static float conversionAngles = 11.6f / 2f;
