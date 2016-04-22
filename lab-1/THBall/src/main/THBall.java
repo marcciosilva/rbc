@@ -2,8 +2,6 @@ package main;
 
 import java.io.IOException;
 
-import behaviors.Avanzar;
-import behaviors.Avoid;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
@@ -18,6 +16,8 @@ import lejos.nxt.remote.RemoteMotor;
 import lejos.nxt.remote.RemoteNXT;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
+import behaviors.Avanzar;
+import behaviors.Avoid;
 
 public class THBall {
 
@@ -43,7 +43,8 @@ public class THBall {
 	public static RemoteMotor pinzaIzq;
 	public static RemoteMotor catapulta;
 	// sensores
-	public static UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(SensorPort.S4);
+	public static UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(
+			SensorPort.S4);
 	public static CompassHTSensor compass = new CompassHTSensor(SensorPort.S1);
 	public static NXTCam camera = new NXTCam(SensorPort.S2);
 	// public static float anguloOriginal = 0.0f;
@@ -61,7 +62,6 @@ public class THBall {
 		} catch (IOException ioe) {
 			LCD.clear();
 			LCD.drawString("Conn Failed", 0, 0);
-			Button.waitForAnyPress();
 			System.exit(1);
 		}
 		pinzaDer = nxt.C;
@@ -70,6 +70,8 @@ public class THBall {
 
 		LCD.drawString("Presione algun boton", 0, 0);
 		Button.waitForAnyPress();
+
+		inicializar();
 		// seteo sensor a modo continuo para no tener que
 		// mandar pings manualmente
 		ultrasonicSensor.continuous();
@@ -213,7 +215,8 @@ public class THBall {
 		backwardMotor.resetTachoCount();
 		forwardMotor.forward();
 		backwardMotor.backward();
-		while (((forwardMotor.getTachoCount() < numDegrees) || (backwardMotor.getTachoCount() > -numDegrees))) {
+		while (((forwardMotor.getTachoCount() < numDegrees) || (backwardMotor
+				.getTachoCount() > -numDegrees))) {
 			if (forwardMotor.getTachoCount() > numDegrees)
 				forwardMotor.stop();
 			if (backwardMotor.getTachoCount() < -numDegrees)
@@ -225,4 +228,11 @@ public class THBall {
 		backwardMotor.stop();
 	}
 
+	public static void inicializar() {
+		pinzaIzq.resetTachoCount();
+		pinzaDer.resetTachoCount();
+		catapulta.resetTachoCount();
+		pinzaIzq.rotateTo(-100);
+		pinzaDer.rotateTo(-100);
+	}
 }
