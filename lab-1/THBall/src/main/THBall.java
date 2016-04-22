@@ -1,7 +1,5 @@
 package main;
 
-import behaviors.Avanzar;
-import behaviors.Avoid;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
@@ -9,8 +7,11 @@ import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
+import lejos.nxt.addon.NXTCam;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
+import behaviors.Avanzar;
+import behaviors.Avoid;
 
 public class THBall {
 
@@ -32,8 +33,10 @@ public class THBall {
 	public static NXTRegulatedMotor leftMotor = Motor.A;
 	public static NXTRegulatedMotor rightMotor = Motor.C;
 	// sensores
-	public static UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(SensorPort.S4);
+	public static UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(
+			SensorPort.S4);
 	public static CompassHTSensor compass = new CompassHTSensor(SensorPort.S1);
+	public static NXTCam camera = new NXTCam(SensorPort.S2);
 	// public static float anguloOriginal = 0.0f;
 	// conversion de clicks del tacometro a grados
 	public static float conversionAngles = 11.6f / 2f;
@@ -185,7 +188,8 @@ public class THBall {
 		backwardMotor.resetTachoCount();
 		forwardMotor.forward();
 		backwardMotor.backward();
-		while (((forwardMotor.getTachoCount() < numDegrees) || (backwardMotor.getTachoCount() > -numDegrees))) {
+		while (((forwardMotor.getTachoCount() < numDegrees) || (backwardMotor
+				.getTachoCount() > -numDegrees))) {
 			if (forwardMotor.getTachoCount() > numDegrees)
 				forwardMotor.stop();
 			if (backwardMotor.getTachoCount() < -numDegrees)
