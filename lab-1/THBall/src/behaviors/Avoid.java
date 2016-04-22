@@ -1,6 +1,5 @@
 package behaviors;
 
-import lejos.nxt.LCD;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.subsumption.Behavior;
@@ -28,33 +27,25 @@ public class Avoid implements Behavior {
 			leftMotor.backward();
 			rightMotor.backward();
 			Thread.yield();
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				LCD.drawString(e.getMessage(), 0, 0);
-			}
+			THBall.sleep(50);
 		}
 		leftMotor.stop();
 		rightMotor.stop();
 		try {
-			if (THBall.goingLeft) {
-				THBall.turn(-180);
-			} else {
-				THBall.turn(180);
-			}
+			// if (THBall.goingLeft) {
+			// THBall.turn(-90);
+			// } else {
+			THBall.turn(90);
+			// }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		while (rightMotor.isMoving() || leftMotor.isMoving()) {
 			Thread.yield();
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				LCD.drawString(e.getMessage(), 0, 0);
-			}
+			THBall.sleep(50);
 		}
-		THBall.facingLeft = !THBall.facingLeft;
-		THBall.nextRow();
+		// THBall.facingLeft = !THBall.facingLeft;
+		// THBall.nextRow();
 	}
 
 	@Override
