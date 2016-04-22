@@ -100,20 +100,19 @@ public class THBall {
 		while (!exitMenu) {
 			buttonPressed = Button.readButtons();
 			if ((buttonPressed & Button.ID_ESCAPE) != Button.ID_ESCAPE) {
-				if ((buttonPressed & Button.ID_LEFT) == Button.ID_LEFT) {
-					LCD.clear();
-					facingLeft = true;
-					goingLeft = true;
-					originalFacing = facingLeft;
-					arbitrator.start();
-					exitMenu = true;
-				} else if ((buttonPressed & Button.ID_RIGHT) == Button.ID_RIGHT) {
-					facingLeft = false;
-					goingLeft = false;
-					originalFacing = facingLeft;
-					arbitrator.start();
-					exitMenu = true;
-				}
+				LCD.clear();
+				// facingLeft = true;
+				// goingLeft = true;
+				// originalFacing = facingLeft;
+				arbitrator.start();
+				exitMenu = true;
+				// } else if ((buttonPressed & Button.ID_RIGHT) ==
+				// Button.ID_RIGHT) {
+				// facingLeft = false;
+				// goingLeft = false;
+				// originalFacing = facingLeft;
+				// arbitrator.start();
+				// exitMenu = true;
 			} else
 				exitMenu = true;
 		}
@@ -223,6 +222,10 @@ public class THBall {
 		}
 		forwardMotor.stop();
 		backwardMotor.stop();
+	}
+
+	public static void exit() {
+		nxt.close();
 	}
 
 }
