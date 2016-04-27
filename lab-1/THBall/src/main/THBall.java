@@ -27,7 +27,14 @@ public class THBall {
 	private static int rows = 5;
 	public static boolean goingLeft = false;
 
-	public final static int SPEED_DRIVE = (int) Motor.A.getMaxSpeed();
+	// angulos pinzas
+	public final static int PINZAS_ABIERTAS = -180;
+	public final static int PINZAS_CERRADAS = 0;
+	public final static int PINZAS_ATRAPAR = -50;
+	public final static int PINZAS_VELOCIDAD_INICIAL = (int) (Motor.A.getMaxSpeed() / 2);
+	public final static int PINZAS_VELOCIDAD_ATRAPAR = (int) (Motor.A.getMaxSpeed() / 16);
+	// velocidades
+	public final static int SPEED_DRIVE = (int) (Motor.A.getMaxSpeed() / 2);
 	public final static int SPEED_TURN = SPEED_DRIVE / 2;
 	final static int SPEED_CALIBRATION = 18;
 	// facingLeft = true indica que al inicio, el robot
@@ -187,17 +194,6 @@ public class THBall {
 		return currentRow == rows - 1;
 	}
 
-	// public static void turn(int angle) throws Exception {
-	// if (angle < 0) {
-	// rightMotor.rotate((int) Math.abs(angle * THBall.conversionAngles),
-	// true);
-	// } else {
-	// leftMotor.rotate((int) (angle * THBall.conversionAngles), true);
-	// }
-	// rightMotor.rotate((int) (angle * THBall.conversionAngles), true);
-	// leftMotor.rotate((int) (-angle * THBall.conversionAngles), true);
-	// }
-
 	public static void turn(int angle) {
 		boolean stop = false;
 		int numDegrees = (int) Math.abs(Math.round(angle * conversionAngles));
@@ -230,11 +226,36 @@ public class THBall {
 	}
 
 	public static void inicializar() {
+		setVelocidadPinzas(PINZAS_VELOCIDAD_INICIAL);
 		pinzaIzq.resetTachoCount();
 		pinzaDer.resetTachoCount();
 		catapulta.resetTachoCount();
-		pinzaIzq.rotateTo(-100);
-		pinzaDer.rotateTo(-100);
+		girarPinzas(PINZAS_ABIERTAS);
+	}
+
+	public static void bajarCatapulta() {
+		catapulta.setSpeed(50);
+		catapulta.rotateTo(80);
+	}
+
+	public static void subirCatapulta() {
+		catapulta.setSpeed(50);
+		catapulta.rotateTo(0);
+	}
+
+	public static void girarPinzas(int angulo) {
+		pinzaIzq.rotateTo(angulo, true);
+		pinzaDer.rotateTo(angulo);
+	}
+
+	public static void atraparPelotas() {
+		setVelocidadPinzas(PINZAS_VELOCIDAD_ATRAPAR);
+		girarPinzas(PINZAS_ATRAPAR);
+	}
+
+	private static void setVelocidadPinzas(int speed) {
+		pinzaIzq.setSpeed(speed);
+		pinzaDer.setSpeed(speed);
 	}
 
 }

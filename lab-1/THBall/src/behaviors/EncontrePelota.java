@@ -7,7 +7,7 @@ import lejos.robotics.Color;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
 
-public class CerrarPinza implements Behavior {
+public class EncontrePelota implements Behavior {
 	private static NXTCam camera = THBall.camera;
 	private static UltrasonicSensor ultrasonicSensor = THBall.ultrasonicSensor;
 	private static RemoteMotor pinzaIzq = THBall.pinzaIzq;
@@ -38,9 +38,7 @@ public class CerrarPinza implements Behavior {
 
 	@Override
 	public void action() {
-		pinzaIzq.rotateTo(-50);
-		pinzaDer.rotateTo(-50);
-
+		THBall.girarPinzas(-50);
 	}
 
 	@Override
