@@ -1,106 +1,47 @@
 package main;
 
-import java.io.IOException;
-
 import behaviors.Avanzar;
 import behaviors.Avoid;
+import behaviors.TirarAzul;
+import behaviors.TirarNaranja;
 import lejos.nxt.Button;
+import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
-import lejos.nxt.UltrasonicSensor;
-import lejos.nxt.addon.CompassHTSensor;
-import lejos.nxt.addon.NXTCam;
-import lejos.nxt.comm.Bluetooth;
-import lejos.nxt.comm.NXTCommConnector;
-import lejos.nxt.remote.RemoteMotor;
-import lejos.nxt.remote.RemoteNXT;
+import lejos.nxt.TouchSensor;
+import lejos.nxt.addon.OpticalDistanceSensor;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 
 public class THBall {
 
 	private static Arbitrator arbitrator;
-	// mapa de la pista
-	private static int currentRow = 0;
-	private static int rows = 5;
-	public static boolean goingLeft = false;
-
-	// angulos pinzas
-	public final static int PINZAS_ABIERTAS = -180;
-	public final static int PINZAS_CERRADAS = 0;
-	public final static int PINZAS_ATRAPAR = -50;
-	public final static int PINZAS_VELOCIDAD_INICIAL = (int) (Motor.A.getMaxSpeed() / 2);
-	public final static int PINZAS_VELOCIDAD_ATRAPAR = (int) (Motor.A.getMaxSpeed() / 16);
-	// velocidades
 	public final static int SPEED_DRIVE = (int) (Motor.A.getMaxSpeed() / 2);
 	public final static int SPEED_TURN = SPEED_DRIVE / 2;
 	final static int SPEED_CALIBRATION = 18;
-	// facingLeft = true indica que al inicio, el robot
-	// tiene a la zona muerta a su lado izquierdo
-	public static boolean facingLeft = false;
-	public static boolean originalFacing = false;
-
+	final static int CATAPULTA_MOVER = 50;
+	final static int CATAPULTA_TIRAR = (int) Motor.A.getMaxSpeed();
 	// actuadores
-	static RemoteNXT nxt;
 	public static NXTRegulatedMotor leftMotor = Motor.A;
 	public static NXTRegulatedMotor rightMotor = Motor.C;
-	public static RemoteMotor pinzaDer;
-	public static RemoteMotor pinzaIzq;
-	public static RemoteMotor catapulta;
+	public static NXTRegulatedMotor catapulta = Motor.B;
 	// sensores
-	public static UltrasonicSensor ultrasonicSensor = new UltrasonicSensor(SensorPort.S4);
-	public static CompassHTSensor compass = new CompassHTSensor(SensorPort.S1);
-	public static NXTCam camera = new NXTCam(SensorPort.S2);
-	// public static float anguloOriginal = 0.0f;
-	// conversion de clicks del tacometro a grados
+	public static OpticalDistanceSensor largaDistancia = new OpticalDistanceSensor(SensorPort.S1);
+	public static OpticalDistanceSensor cortaDistancia = new OpticalDistanceSensor(SensorPort.S4);
+	public static TouchSensor touchSensor = new TouchSensor(SensorPort.S2);
+	public static ColorSensor colorSensor = new ColorSensor(SensorPort.S3);
+
 	public static float conversionAngles = 11.6f / 2f;
 
 	public static void main(String[] args) {
-
-		try {
-			LCD.drawString("Connecting...", 0, 0);
-			NXTCommConnector connector = Bluetooth.getConnector();
-			nxt = new RemoteNXT("rbc4_2", connector);
-			LCD.clear();
-			LCD.drawString("Connected", 0, 0);
-		} catch (IOException ioe) {
-			LCD.clear();
-			LCD.drawString("Conn Failed", 0, 0);
-			System.exit(1);
-		}
-		pinzaDer = nxt.C;
-		pinzaIzq = nxt.A;
-		catapulta = nxt.B;
 
 		LCD.drawString("Presione algun boton", 0, 0);
 		Button.waitForAnyPress();
 
 		inicializar();
-		// seteo sensor a modo continuo para no tener que
-		// mandar pings manualmente
-		ultrasonicSensor.continuous();
-		// new Thread() {
-		//
-		// int angulo;
-		//
-		// @Override
-		// public void run() {
-		// LCD.clear(1);
-		// LCD.drawString(Integer.toString(angulo), 0, 1);
-		// RConsole.print(Integer.toString(angulo));
-		// Delay.msDelay(200);
-		// }
-		//
-		// }.start();
-
 		setupBehaviors();
-		// calibración del compás magnético
-		// calibrateCompass();
-		// si se toca escape, sale
-		// si toca right, la zona muerta esta a su derecha
-		// si toca left, la zona muerta esta a su izquierda
 		boolean exitMenu = false;
 		LCD.clear();
 		LCD.drawString("Presione algun boton", 0, 0);
@@ -109,18 +50,8 @@ public class THBall {
 			buttonPressed = Button.readButtons();
 			if ((buttonPressed & Button.ID_ESCAPE) != Button.ID_ESCAPE) {
 				LCD.clear();
-				// facingLeft = true;
-				// goingLeft = true;
-				// originalFacing = facingLeft;
 				arbitrator.start();
 				exitMenu = true;
-				// } else if ((buttonPressed & Button.ID_RIGHT) ==
-				// Button.ID_RIGHT) {
-				// facingLeft = false;
-				// goingLeft = false;
-				// originalFacing = facingLeft;
-				// arbitrator.start();
-				// exitMenu = true;
 			} else
 				exitMenu = true;
 		}
@@ -128,34 +59,14 @@ public class THBall {
 
 	private static void setupBehaviors() {
 		Behavior avanzar = new Avanzar();
-		// Behavior correct = new Corregir();
 		Behavior avoid = new Avoid();
-		// Behavior avoidDeathzone = new AvoidDeathzone();
+		Behavior tirarAzul = new TirarAzul();
+		Behavior tirarNaranja = new TirarNaranja();
 		// pongo behaviors en orden de prioridad
 		// a mayor indice mayor prioridad
-		Behavior behaviors[] = { avanzar, avoid };// , avoidDeathzone
-		// };
+		Behavior behaviors[] = { avanzar, avoid, tirarAzul, tirarNaranja };
 		// declaro arbitrator
 		arbitrator = new Arbitrator(behaviors);
-	}
-
-	private static void calibrateCompass() {
-		LCD.clear();
-		LCD.drawString("Calibrando...", 0, 0);
-		// anguloOriginal = compass.getDegrees();
-		compass.startCalibration();
-		setSpeed(SPEED_CALIBRATION);
-		leftMotor.forward();
-		rightMotor.backward();
-		// la idea es que en 40 segundos haga dos vueltas completas
-		// hay que calibrar eso experimentalmente
-		sleep(40000);
-		leftMotor.stop();
-		rightMotor.stop();
-		compass.stopCalibration();
-		// cinco segundos para posicionar al robot donde se quiera
-		sleep(5000);
-		compass.resetCartesianZero();
 	}
 
 	public static void sleep(int tiempo) {
@@ -182,20 +93,7 @@ public class THBall {
 		}
 	}
 
-	public static void resetCurrentRow() {
-		currentRow = 0;
-	}
-
-	public static void nextRow() {
-		currentRow = (currentRow++) % rows;
-	}
-
-	public static boolean nextToDeathZone() {
-		return currentRow == rows - 1;
-	}
-
 	public static void turn(int angle) {
-		boolean stop = false;
 		int numDegrees = (int) Math.abs(Math.round(angle * conversionAngles));
 		// set motors up for counter-clockwise rotation
 		NXTRegulatedMotor forwardMotor = leftMotor;
@@ -214,48 +112,52 @@ public class THBall {
 				forwardMotor.stop();
 			if (backwardMotor.getTachoCount() < -numDegrees)
 				backwardMotor.stop();
-			Thread.yield();
-			sleep(50);
+			// Thread.yield();
+			// sleep(50);
 		}
 		forwardMotor.stop();
 		backwardMotor.stop();
 	}
 
 	public static void exit() {
-		nxt.close();
 	}
 
 	public static void inicializar() {
-		setVelocidadPinzas(PINZAS_VELOCIDAD_INICIAL);
-		pinzaIzq.resetTachoCount();
-		pinzaDer.resetTachoCount();
 		catapulta.resetTachoCount();
-		girarPinzas(PINZAS_ABIERTAS);
+		bajarCatapulta();
 	}
 
 	public static void bajarCatapulta() {
-		catapulta.setSpeed(50);
-		catapulta.rotateTo(80);
+		catapulta.setSpeed(CATAPULTA_MOVER);
+		catapulta.rotateTo(90);
 	}
 
 	public static void subirCatapulta() {
-		catapulta.setSpeed(50);
+		catapulta.setSpeed(CATAPULTA_MOVER);
 		catapulta.rotateTo(0);
 	}
 
-	public static void girarPinzas(int angulo) {
-		pinzaIzq.rotateTo(angulo, true);
-		pinzaDer.rotateTo(angulo);
+	public static void moverCatapulta(int angle) {
+		catapulta.setSpeed(CATAPULTA_MOVER);
+		catapulta.rotateTo(angle);
 	}
 
-	public static void atraparPelotas() {
-		setVelocidadPinzas(PINZAS_VELOCIDAD_ATRAPAR);
-		girarPinzas(PINZAS_ATRAPAR);
+	public static void tirarPelota() {
+		catapulta.setSpeed(CATAPULTA_TIRAR);
+		catapulta.rotateTo(30);
+		bajarCatapulta();
 	}
 
-	private static void setVelocidadPinzas(int speed) {
-		pinzaIzq.setSpeed(speed);
-		pinzaDer.setSpeed(speed);
+	public static void girarRandom() {
+		try {
+			double sign = Math.random();
+			if (sign > 0.5)
+				THBall.turn((int) (Math.random() * 180));
+			else
+				THBall.turn((int) (-Math.random() * 180));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

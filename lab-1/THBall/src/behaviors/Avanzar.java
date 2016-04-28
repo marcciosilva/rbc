@@ -22,8 +22,7 @@ public class Avanzar implements Behavior {
 
 	@Override
 	public void suppress() {
-		THBall.leftMotor.stop();
-		THBall.rightMotor.stop();
+		THBall.stopMotors();
 	}
 
 }
