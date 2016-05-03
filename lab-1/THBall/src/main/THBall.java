@@ -1,9 +1,5 @@
 package main;
 
-import behaviors.Avanzar;
-import behaviors.Avoid;
-import behaviors.TirarAzul;
-import behaviors.TirarNaranja;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
@@ -14,6 +10,11 @@ import lejos.nxt.TouchSensor;
 import lejos.nxt.addon.OpticalDistanceSensor;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
+import lejos.util.Delay;
+import behaviors.Avanzar;
+import behaviors.Avoid;
+import behaviors.TirarAzul;
+import behaviors.TirarNaranja;
 
 public class THBall {
 
@@ -52,8 +53,7 @@ public class THBall {
 				LCD.clear();
 				arbitrator.start();
 				exitMenu = true;
-			} else
-				exitMenu = true;
+			} else exitMenu = true;
 		}
 	}
 
@@ -78,7 +78,7 @@ public class THBall {
 		}
 	}
 
-	public static void stopMotors() {
+	public static void stopMoving() {
 		leftMotor.stop();
 		rightMotor.stop();
 	}
@@ -108,10 +108,8 @@ public class THBall {
 		forwardMotor.forward();
 		backwardMotor.backward();
 		while (((forwardMotor.getTachoCount() < numDegrees) || (backwardMotor.getTachoCount() > -numDegrees))) {
-			if (forwardMotor.getTachoCount() > numDegrees)
-				forwardMotor.stop();
-			if (backwardMotor.getTachoCount() < -numDegrees)
-				backwardMotor.stop();
+			if (forwardMotor.getTachoCount() > numDegrees) forwardMotor.stop();
+			if (backwardMotor.getTachoCount() < -numDegrees) backwardMotor.stop();
 			// Thread.yield();
 			// sleep(50);
 		}
@@ -151,13 +149,28 @@ public class THBall {
 	public static void girarRandom() {
 		try {
 			double sign = Math.random();
-			if (sign > 0.5)
-				THBall.turn((int) (Math.random() * 180));
-			else
-				THBall.turn((int) (-Math.random() * 180));
+			if (sign > 0.5) THBall.turn((int) (Math.random() * 180));
+			else THBall.turn((int) (-Math.random() * 180));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void avanzar() {
+		leftMotor.forward();
+		rightMotor.forward();
+	}
+
+	/**
+	 * Viaja durante los milisegundos que se le pasen
+	 * 
+	 * @param i
+	 */
+	public static void travelFor(int miliseconds) {
+		THBall.setSpeed(SPEED_DRIVE);
+		avanzar();
+		Delay.msDelay(miliseconds);
+		stopMoving();
 	}
 
 }

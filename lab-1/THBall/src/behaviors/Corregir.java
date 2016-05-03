@@ -57,7 +57,7 @@ public class Corregir implements Behavior {
 
 	@Override
 	public void action() {
-		THBall.stopMotors();
+		THBall.stopMoving();
 		THBall.setSpeed(THBall.SPEED_TURN);
 		if (desviadoDerecha()) {
 			rightMotor.forward();
@@ -71,12 +71,12 @@ public class Corregir implements Behavior {
 			Thread.yield();
 			THBall.sleep(50);
 		}
-		THBall.stopMotors();
+		THBall.stopMoving();
 	}
 
 	@Override
 	public void suppress() {
-		THBall.stopMotors();
+		THBall.stopMoving();
 	}
 
 }

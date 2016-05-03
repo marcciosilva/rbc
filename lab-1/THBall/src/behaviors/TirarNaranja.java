@@ -30,7 +30,7 @@ public class TirarNaranja implements Behavior {
 
 	@Override
 	public void action() {
-		THBall.stopMotors();
+		THBall.stopMoving();
 		leftMotor.backward();
 		rightMotor.backward();
 		Delay.msDelay(100);
@@ -42,7 +42,7 @@ public class TirarNaranja implements Behavior {
 	@Override
 	public void suppress() {
 		THBall.bajarCatapulta();
-		THBall.stopMotors();
+		THBall.stopMoving();
 	}
 
 }
