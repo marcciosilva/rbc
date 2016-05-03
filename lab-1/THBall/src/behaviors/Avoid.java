@@ -30,8 +30,8 @@ public class Avoid implements Behavior {
 		while (cortaDistancia.getDistance() < 100) {
 			leftMotor.backward();
 			rightMotor.backward();
-			Thread.yield();
-			THBall.sleep(50);
+			// Thread.yield();
+			// THBall.sleep(50);
 		}
 		leftMotor.stop();
 		rightMotor.stop();
@@ -44,7 +44,7 @@ public class Avoid implements Behavior {
 
 	@Override
 	public void suppress() {
-		THBall.stopMotors();
+		THBall.stopMoving();
 	}
 
 }
