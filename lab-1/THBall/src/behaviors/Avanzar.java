@@ -12,13 +12,19 @@ public class Avanzar implements Behavior {
 	}
 
 	public void action() {
-		stop = false;
-		while (!stop)
-			THBall.travelFor(100);
+		THBall.setSpeed(THBall.SPEED_DRIVE);
+		// stop = false;
+		// while (!stop)
+		// THBall.travelFor(100);
+		// while (!stop) {
+		THBall.avanzar();
+		// Delay.msDelay(100000);
+		// }
+
 	}
 
 	public void suppress() {
-		stop = true;
+		// stop = true;
 		THBall.stopMoving();
 	}
 

@@ -30,6 +30,7 @@ public class TirarAzul implements Behavior {
 
 	@Override
 	public void action() {
+		THBall.setSpeed(THBall.SPEED_DRIVE);
 		THBall.stopMoving();
 		leftMotor.backward();
 		rightMotor.backward();
@@ -37,8 +38,11 @@ public class TirarAzul implements Behavior {
 		leftMotor.stop();
 		rightMotor.stop();
 		THBall.moverCatapulta(60);
-		THBall.turn(30);
+		THBall.setSpeed(THBall.SPEED_TURN);
+		THBall.turnBy(30);
+		// THBall.turn(30);
 		THBall.bajarCatapulta();
+		THBall.turnBy(330);
 	}
 
 	@Override
