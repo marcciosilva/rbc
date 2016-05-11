@@ -2,6 +2,7 @@ package main;
 
 import behaviors.Avanzar;
 import behaviors.Avoid;
+import behaviors.Corregir;
 import behaviors.TengoNaranja;
 import behaviors.TirarAzul;
 import behaviors.TirarNaranja;
@@ -21,8 +22,9 @@ import lejos.util.Delay;
 public class THBall {
 
 	private static Arbitrator arbitrator;
-	public final static int SPEED_DRIVE = (int) (Motor.A.getMaxSpeed() / 2);
-	public final static int SPEED_TURN = SPEED_DRIVE / 4;
+	public final static int SPEED_DRIVE = (int) (Motor.A.getMaxSpeed() / 2.0f);
+	public final static int SPEED_TURN = (int) (SPEED_DRIVE / 4.0f);
+	public final static int SPEED_CORRECT = (int) (SPEED_TURN / 4.0f);
 	final static int SPEED_CALIBRATION = 18;
 	final static int CATAPULTA_MOVER = 50;
 	final static int CATAPULTA_TIRAR = (int) Motor.A.getMaxSpeed();
@@ -38,7 +40,8 @@ public class THBall {
 	public static GyroSensor gyro = new GyroSensor(SensorPort.S1);
 	// LCD.drawString("Calibrando", 0, 0);
 	public static GyroDirectionFinder gdf;
-	public static TouchSensor touchSensor = new TouchSensor(SensorPort.S2);
+	public static TouchSensor leftTouchSensor = new TouchSensor(SensorPort.S2);
+	public static TouchSensor rightTouchSensor = new TouchSensor(SensorPort.S4);
 	public static ColorSensor colorSensor = new ColorSensor(SensorPort.S3);
 
 	public static float conversionAngles = 11.6f / 2f;
@@ -68,12 +71,15 @@ public class THBall {
 	private static void setupBehaviors() {
 		Behavior avanzar = new Avanzar();
 		Behavior avoid = new Avoid();
+		Behavior corregir = new Corregir();
 		Behavior tirarAzul = new TirarAzul();
 		Behavior tengoNaranja = new TengoNaranja();
 		Behavior tirarNaranja = new TirarNaranja();
 		// pongo behaviors en orden de prioridad
 		// a mayor indice mayor prioridad
-		Behavior behaviors[] = { avanzar, tirarAzul, tengoNaranja, avoid, tirarNaranja };
+		Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja };// tirarAzul,
+		// tengoNaranja,
+		// avoid, tirarNaranja };
 		// declaro arbitrator
 		arbitrator = new Arbitrator(behaviors);
 	}
@@ -133,7 +139,7 @@ public class THBall {
 
 	public static void inicializar() {
 		gdf = new GyroDirectionFinder(gyro, true);
-		Delay.msDelay(10000);
+		Delay.msDelay(5000);
 		gdf.setDegreesCartesian(0.0f);
 		catapulta.resetTachoCount();
 		bajarCatapulta();
@@ -230,6 +236,18 @@ public class THBall {
 	public static void turn() {
 		leftMotor.forward();
 		rightMotor.backward();
+	}
+
+	public static void resetGyro() {
+		float error = 5.0f;
+		if (inRange(gdf.getDegrees(), 0.0f, error))
+			gdf.setDegreesCartesian(0.0f);
+		else if (inRange(gdf.getDegrees(), 90.0f, error))
+			gdf.setDegreesCartesian(90.0f);
+		else if (inRange(gdf.getDegrees(), 180.0f, error))
+			gdf.setDegreesCartesian(180.0f);
+		else if (inRange(gdf.getDegrees(), 270.0f, error))
+			gdf.setDegreesCartesian(270.0f);
 	}
 
 }

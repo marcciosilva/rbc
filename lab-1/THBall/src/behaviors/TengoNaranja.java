@@ -8,7 +8,7 @@ import main.THBall;
 
 public class TengoNaranja implements Behavior {
 
-	static TouchSensor touchSensor = THBall.touchSensor;
+	static TouchSensor touchSensor = THBall.leftTouchSensor;
 	static ColorSensor colorSensor = THBall.colorSensor;
 	static NXTRegulatedMotor catapulta = THBall.catapulta;
 	static NXTRegulatedMotor leftMotor = THBall.leftMotor;

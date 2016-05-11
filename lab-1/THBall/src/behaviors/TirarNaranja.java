@@ -13,7 +13,8 @@ public class TirarNaranja implements Behavior {
 	static NXTRegulatedMotor catapulta = THBall.catapulta;
 	static NXTRegulatedMotor leftMotor = THBall.leftMotor;
 	static NXTRegulatedMotor rightMotor = THBall.rightMotor;
-	static TouchSensor touchSensor = THBall.touchSensor;
+	static TouchSensor leftTouchSensor = THBall.leftTouchSensor;
+	static TouchSensor rightTouchSensor = THBall.rightTouchSensor;
 	static int error = 5;
 
 	public static boolean inRange(int min, int max, int value) {
@@ -27,27 +28,33 @@ public class TirarNaranja implements Behavior {
 		int r = color.getRed();
 		int g = color.getGreen();
 		int b = color.getBlue();
-		return touchSensor.isPressed() && (inRange(85, 115, r) && inRange(85, 120, g) && inRange(30, 50, b));
+		// return touchSensor.isPressed() && (inRange(85, 115, r) && inRange(85,
+		// 120, g) && inRange(30, 50, b));
+		return (inRange(85, 115, r) && inRange(85, 120, g) && inRange(30, 50, b));
 	}
 
 	@Override
 	public void action() {
-		THBall.setSpeed(THBall.SPEED_TURN);
-		// leftMotor.resetTachoCount();
-		// rightMotor.resetTachoCount();
-		// retrocede hasta estar a por lo menos 20 cm
-		// de algun obstaculo
-		// int distanciaRetroceso = (int)(Math.random() * 20 + 30);
-		// while (cortaDistancia.getDistance() < distanciaRetroceso) {
+		// THBall.stopMoving();
+		THBall.setSpeed(THBall.SPEED_DRIVE);
 		leftMotor.backward();
 		rightMotor.backward();
-		// Thread.yield();
-		// THBall.sleep(50);
-		// }
-		int tiempoRetroceso = (int) (Math.random() * 3 + 2) * 1000;
+		int tiempoRetroceso = (int) (Math.random() + 1) * 1000;
+		Delay.msDelay(tiempoRetroceso);
+		THBall.setSpeed(THBall.SPEED_TURN);
+		THBall.turnTo(90.0f);
+		THBall.setSpeed(THBall.SPEED_DRIVE);
+		THBall.avanzar();
+		while (!leftTouchSensor.isPressed() && !rightTouchSensor.isPressed())
+			;
+		THBall.stopMoving();
+		leftMotor.backward();
+		rightMotor.backward();
+		tiempoRetroceso = (int) (Math.random() + 0.5) * 1000;
 		Delay.msDelay(tiempoRetroceso);
 		THBall.stopMoving();
-		THBall.turnBy(180.0f);
+		THBall.setSpeed(THBall.SPEED_TURN);
+		THBall.turnTo(270.0f);
 		THBall.tirarPelota();
 	}
 

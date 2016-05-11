@@ -12,24 +12,23 @@ public class Avoid implements Behavior {
 	// static OpticalDistanceSensor largaDistancia = THBall.largaDistancia;
 	// static OpticalDistanceSensor cortaDistancia = THBall.cortaDistancia;
 	static GyroDirectionFinder gdf = THBall.gdf;
-	static TouchSensor touchSensor = THBall.touchSensor;
+	static TouchSensor leftTouchSensor = THBall.leftTouchSensor;
+	static TouchSensor rightTouchSensor = THBall.rightTouchSensor;
 	static NXTRegulatedMotor leftMotor = THBall.leftMotor;
 	static NXTRegulatedMotor rightMotor = THBall.rightMotor;
 	static NXTRegulatedMotor catapulta = THBall.catapulta;
 
 	@Override
 	public boolean takeControl() {
-		return touchSensor.isPressed();
+		return leftTouchSensor.isPressed() && rightTouchSensor.isPressed();
 	}
 
 	@Override
 	public void action() {
-		if (THBall.inRange(gdf.getDegrees(), 0.0f, 2.0f)) {
-			gdf.resetCartesianZero();
-		}
+		Delay.msDelay(200);
+		THBall.stopMoving();
+		THBall.resetGyro();
 		THBall.setSpeed(THBall.SPEED_TURN);
-		// leftMotor.resetTachoCount();
-		// rightMotor.resetTachoCount();
 		// retrocede hasta estar a por lo menos 20 cm
 		// de algun obstaculo
 		// int distanciaRetroceso = (int)(Math.random() * 20 + 30);
