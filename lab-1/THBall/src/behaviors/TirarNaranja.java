@@ -39,8 +39,7 @@ public class TirarNaranja implements Behavior {
 		THBall.setSpeed(THBall.SPEED_DRIVE);
 		leftMotor.backward();
 		rightMotor.backward();
-		int tiempoRetroceso = (int) (Math.random() + 1) * 1000;
-		Delay.msDelay(tiempoRetroceso);
+		Delay.msDelay(500);
 		THBall.setSpeed(THBall.SPEED_TURN);
 		THBall.turnTo(90.0f);
 		THBall.setSpeed(THBall.SPEED_DRIVE);
@@ -50,11 +49,11 @@ public class TirarNaranja implements Behavior {
 		THBall.stopMoving();
 		leftMotor.backward();
 		rightMotor.backward();
-		tiempoRetroceso = (int) (Math.random() + 0.5) * 1000;
-		Delay.msDelay(tiempoRetroceso);
+		Delay.msDelay(500);
 		THBall.stopMoving();
 		THBall.setSpeed(THBall.SPEED_TURN);
 		THBall.turnTo(270.0f);
+		// THBall.turnBy(180.0f);
 		THBall.tirarPelota();
 	}
 
