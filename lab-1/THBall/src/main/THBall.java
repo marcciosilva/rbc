@@ -3,6 +3,7 @@ package main;
 import behaviors.Avanzar;
 import behaviors.Avoid;
 import behaviors.Corregir;
+import behaviors.TengoNaranja;
 import behaviors.TirarAzul;
 import behaviors.TirarNaranja;
 import lejos.nxt.Button;
@@ -25,9 +26,9 @@ public class THBall {
 	public final static int SPEED_TURN = (int) (SPEED_DRIVE / 4.0f);
 	public final static int SPEED_CORRECT = (int) (SPEED_TURN / 4.0f);
 	final static int SPEED_CALIBRATION = 18;
-	final static int CATAPULTA_MOVER = 50;
-	final static int CATAPULTA_TIRAR = (int) Motor.A.getMaxSpeed();
-	final static float ERROR_PERMITIDO_ANGULO = 3.0f;
+	final static int CATAPULTA_MOVER = 20;
+	final static int CATAPULTA_TIRAR = 900;// (int) Motor.A.getMaxSpeed() * 10;
+	public final static float ERROR_PERMITIDO_ANGULO = 3.0f;
 	// actuadores
 	public static NXTRegulatedMotor leftMotor = Motor.A;
 	public static NXTRegulatedMotor rightMotor = Motor.C;
@@ -73,11 +74,11 @@ public class THBall {
 		Behavior avoid = new Avoid();
 		Behavior corregir = new Corregir();
 		Behavior tirarAzul = new TirarAzul();
-		// Behavior tengoNaranja = new TengoNaranja();
+		Behavior tengoNaranja = new TengoNaranja();
 		Behavior tirarNaranja = new TirarNaranja();
 		// pongo behaviors en orden de prioridad
 		// a mayor indice mayor prioridad
-		Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja };
+		Behavior behaviors[] = { avanzar, corregir, avoid, tirarAzul, tirarNaranja };
 		// declaro arbitrator
 		arbitrator = new Arbitrator(behaviors);
 	}
@@ -158,8 +159,10 @@ public class THBall {
 	}
 
 	public static void tirarPelota() {
-		catapulta.setSpeed(CATAPULTA_TIRAR);
+		catapulta.setSpeed(CATAPULTA_MOVER);
 		catapulta.rotateTo(30);
+		catapulta.setSpeed(CATAPULTA_TIRAR);
+		catapulta.rotateTo(70);
 		bajarCatapulta();
 	}
 
@@ -176,8 +179,17 @@ public class THBall {
 	// }
 
 	public static void avanzar() {
+		setSpeed(SPEED_DRIVE);
 		leftMotor.forward();
 		rightMotor.forward();
+	}
+
+	public static void atrasar(int ms) {
+		setSpeed(SPEED_DRIVE);
+		leftMotor.backward();
+		rightMotor.backward();
+		Delay.msDelay(ms);
+		stopMoving();
 	}
 
 	/**
@@ -192,22 +204,22 @@ public class THBall {
 	// stopMoving();
 	// }
 
-	private static float modAngulo(float angulo) {
+	public static float modAngulo(float angulo) {
 		angulo = angulo % 360.0f;
 		if (angulo < 0)
-			angulo += 360;
+			angulo += 360.0f;
 		return angulo % 360.0f;
 	}
 
-	private static enum TurnSide {
+	public static enum TurnSide {
 		RIGHT, LEFT
 	}
 
-	private static TurnSide FindTurnSide(float current, float target) {
+	public static TurnSide FindTurnSide(float current, float target) {
 		float diff = target - current;
-		if (diff < 0)
-			diff += 360;
-		if (diff > 180)
+		if (diff < 0.0f)
+			diff += 360.0f;
+		if (diff > 180.0f)
 			return TurnSide.LEFT;
 		else
 			return TurnSide.RIGHT;
@@ -220,6 +232,7 @@ public class THBall {
 	}
 
 	public static void turnTo(float anguloObjetivo) {
+		setSpeed(SPEED_TURN);
 		float anguloActual = modAngulo(gdf.getDegrees());
 		// por si me pasan un valor de afuera y no desde turnBy
 		anguloObjetivo = modAngulo(anguloObjetivo);
@@ -244,6 +257,12 @@ public class THBall {
 				turnSide = TurnSide.LEFT;
 				turnLeft();
 			}
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -254,30 +273,34 @@ public class THBall {
 
 	public static boolean inRangeAngle(float valorActual, float valorEsperado, float error) {
 		// true if value is in range of reference
+		valorActual = modAngulo(valorActual);
+		valorEsperado = modAngulo(valorEsperado);
 		float smallestDifference = valorEsperado - valorActual;
 		smallestDifference = ((smallestDifference + 180.0f) % 360.0f) - 180.0f;
 		return (Math.abs(smallestDifference) <= error);
 	}
 
 	public static void turnRight() {
+		setSpeed(SPEED_TURN);
 		leftMotor.forward();
 		rightMotor.backward();
 	}
 
 	public static void turnLeft() {
+		setSpeed(SPEED_TURN);
 		rightMotor.forward();
 		leftMotor.backward();
 	}
 
 	public static void resetGyro() {
 		if (inRange(gdf.getDegrees(), 0.0f, ERROR_PERMITIDO_ANGULO))
-			gdf.setDegreesCartesian(0.0f);
+			gdf.setDegrees(0.0f);
 		else if (inRange(gdf.getDegrees(), 90.0f, ERROR_PERMITIDO_ANGULO))
-			gdf.setDegreesCartesian(90.0f);
+			gdf.setDegrees(90.0f);
 		else if (inRange(gdf.getDegrees(), 180.0f, ERROR_PERMITIDO_ANGULO))
-			gdf.setDegreesCartesian(180.0f);
+			gdf.setDegrees(180.0f);
 		else if (inRange(gdf.getDegrees(), 270.0f, ERROR_PERMITIDO_ANGULO))
-			gdf.setDegreesCartesian(270.0f);
+			gdf.setDegrees(270.0f);
 	}
 
 }

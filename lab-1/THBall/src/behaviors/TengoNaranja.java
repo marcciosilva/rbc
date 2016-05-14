@@ -3,11 +3,15 @@ package behaviors;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.TouchSensor;
+import lejos.nxt.addon.GyroDirectionFinder;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
+import main.THBall.TurnSide;
 
 public class TengoNaranja implements Behavior {
 
+	static GyroDirectionFinder gdf = THBall.gdf;
+	static boolean suppressed = false;
 	static TouchSensor touchSensor = THBall.leftTouchSensor;
 	static ColorSensor colorSensor = THBall.colorSensor;
 	static NXTRegulatedMotor catapulta = THBall.catapulta;
@@ -26,24 +30,57 @@ public class TengoNaranja implements Behavior {
 		int r = color.getRed();
 		int g = color.getGreen();
 		int b = color.getBlue();
-		return (inRange(85, 115, r) && inRange(85, 120, g) && inRange(30, 50, b));
+		return (inRange(85, 115, r) && inRange(85, 120, g) && inRange(30, 50, b))
+				&& (!THBall.inRangeAngle(THBall.modAngulo(gdf.getDegrees()), 90.0f, THBall.ERROR_PERMITIDO_ANGULO));
 	}
 
 	@Override
 	public void action() {
-		// THBall.stopMoving();
-		// leftMotor.backward();
-		// rightMotor.backward();
-		// Delay.msDelay(100);
-		THBall.setSpeed(THBall.SPEED_TURN);
+		suppressed = false;
+		THBall.stopMoving();
+		THBall.atrasar(250);
 		THBall.turnTo(90.0f);
-		THBall.avanzar();
-		while (!touchSensor.isPressed())
-			;
+	}
+
+	public static void turnBy(float angulo) {
+		float anguloActual = THBall.modAngulo(gdf.getDegrees());
+		float anguloObjetivo = anguloActual + THBall.modAngulo(angulo);
+		turnTo(anguloObjetivo);
+	}
+
+	public static void turnTo(float anguloObjetivo) {
+		THBall.setSpeed(THBall.SPEED_TURN);
+		float anguloActual = THBall.modAngulo(gdf.getDegrees());
+		// por si me pasan un valor de afuera y no desde turnBy
+		anguloObjetivo = THBall.modAngulo(anguloObjetivo);
+		TurnSide turnSide;
+		if (THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) {
+			turnSide = TurnSide.RIGHT;
+			THBall.turnRight();
+		} else {
+			turnSide = TurnSide.LEFT;
+			THBall.turnLeft();
+		}
+		while (!suppressed) {
+			anguloActual = THBall.modAngulo(gdf.getDegrees());
+			if (THBall.inRangeAngle(anguloActual, anguloObjetivo, THBall.ERROR_PERMITIDO_ANGULO)) {
+				THBall.stopMoving();
+				break;
+			}
+			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
+				turnSide = TurnSide.RIGHT;
+				THBall.turnRight();
+			} else if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)
+					&& turnSide != TurnSide.LEFT) {
+				turnSide = TurnSide.LEFT;
+				THBall.turnLeft();
+			}
+		}
 	}
 
 	@Override
 	public void suppress() {
+		suppressed = true;
 		THBall.stopMoving();
 	}
 
