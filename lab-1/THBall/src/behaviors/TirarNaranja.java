@@ -34,13 +34,27 @@ public class TirarNaranja implements Behavior {
 		int b = color.getBlue();
 		// return touchSensor.isPressed() && (inRange(85, 115, r) && inRange(85,
 		// 120, g) && inRange(30, 50, b));
-		return (inRange(85, 115, r) && inRange(85, 120, g) && inRange(30, 50, b));
+		// return (inRange(85, 120, r) && inRange(85, 120, g) && inRange(30, 50,
+		// b));
+		return (r >= 100 && g >= 100 && b >= 40);
+
+		// 130 110 150
+		// 120 90 40
 		// && THBall.inRangeAngle(THBall.modAngulo(gdf.getDegrees()), 90.0f,
 		// THBall.ERROR_PERMITIDO_ANGULO);
 	}
 
 	@Override
 	public void action() {
+		// THBall.stopMoving();
+		// THBall.atrasar(250);
+		// THBall.turnTo(90.0f);
+		// THBall.avanzar();
+		// while (!leftTouchSensor.isPressed() && !rightTouchSensor.isPressed()
+		// && !suppressed)
+		// ;
+		// THBall.atrasar(600);
+		// THBall.tirarPelota();
 		THBall.stopMoving();
 		THBall.atrasar(250);
 		THBall.turnTo(90.0f);
@@ -48,6 +62,7 @@ public class TirarNaranja implements Behavior {
 		while (!leftTouchSensor.isPressed() && !rightTouchSensor.isPressed() && !suppressed)
 			;
 		THBall.atrasar(600);
+		THBall.turnTo(270);
 		THBall.tirarPelota();
 	}
 

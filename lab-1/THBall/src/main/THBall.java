@@ -26,8 +26,8 @@ public class THBall {
 	public final static int SPEED_TURN = (int) (SPEED_DRIVE / 4.0f);
 	public final static int SPEED_CORRECT = (int) (SPEED_TURN / 4.0f);
 	final static int SPEED_CALIBRATION = 18;
-	final static int CATAPULTA_MOVER = 20;
-	final static int CATAPULTA_TIRAR = 900;// (int) Motor.A.getMaxSpeed() * 10;
+	final static int CATAPULTA_TIRAR = (int) Motor.A.getMaxSpeed();
+	final static int CATAPULTA_MOVER = (int) (CATAPULTA_TIRAR / 10.0f);
 	public final static float ERROR_PERMITIDO_ANGULO = 3.0f;
 	// actuadores
 	public static NXTRegulatedMotor leftMotor = Motor.A;
@@ -78,7 +78,9 @@ public class THBall {
 		Behavior tirarNaranja = new TirarNaranja();
 		// pongo behaviors en orden de prioridad
 		// a mayor indice mayor prioridad
-		Behavior behaviors[] = { avanzar, corregir, avoid, tirarAzul, tirarNaranja };
+		Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja };// tirarAzul,
+																			// tirarNaranja
+																			// };
 		// declaro arbitrator
 		arbitrator = new Arbitrator(behaviors);
 	}
@@ -145,24 +147,32 @@ public class THBall {
 
 	public static void bajarCatapulta() {
 		catapulta.setSpeed(CATAPULTA_MOVER);
-		catapulta.rotateTo(90);
+		catapulta.rotateTo(-220, false);
 	}
 
 	public static void subirCatapulta() {
 		catapulta.setSpeed(CATAPULTA_MOVER);
-		catapulta.rotateTo(0);
+		catapulta.rotateTo(0, false);
 	}
 
 	public static void moverCatapulta(int angle) {
 		catapulta.setSpeed(CATAPULTA_MOVER);
-		catapulta.rotateTo(angle);
+		catapulta.rotateTo(angle, false);
 	}
 
 	public static void tirarPelota() {
-		catapulta.setSpeed(CATAPULTA_MOVER);
-		catapulta.rotateTo(30);
+		// catapulta.setSpeed(CATAPULTA_MOVER);
+		// // catapulta.rotateTo(5, false);
+		// catapulta.rotateTo(-70, false);
+		// // while (catapulta.isMoving())
+		// // ;
+		// catapulta.setSpeed(CATAPULTA_TIRAR);
+		// catapulta.rotateTo(-170, false);
+		// // while (catapulta.isMoving())
+		// // ;
+		// bajarCatapulta();
 		catapulta.setSpeed(CATAPULTA_TIRAR);
-		catapulta.rotateTo(70);
+		catapulta.rotateTo(-90, false);
 		bajarCatapulta();
 	}
 
@@ -260,7 +270,6 @@ public class THBall {
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

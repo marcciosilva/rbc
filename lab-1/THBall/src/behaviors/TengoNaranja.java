@@ -30,7 +30,9 @@ public class TengoNaranja implements Behavior {
 		int r = color.getRed();
 		int g = color.getGreen();
 		int b = color.getBlue();
-		return (inRange(85, 115, r) && inRange(85, 120, g) && inRange(30, 50, b))
+		return (r >= 100 && g >= 100 && b >= 40)
+				// return (inRange(85, 115, r) && inRange(85, 120, g) &&
+				// inRange(30, 50, b))
 				&& (!THBall.inRangeAngle(THBall.modAngulo(gdf.getDegrees()), 90.0f, THBall.ERROR_PERMITIDO_ANGULO));
 	}
 

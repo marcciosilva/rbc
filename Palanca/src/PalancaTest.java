@@ -26,7 +26,8 @@ public class PalancaTest {
 
 			@Override
 			public void buttonPressed(Button b) {
-				motor.rotateTo(100, true);
+				// motor.rotateTo(100, true);
+				motor.rotate(-10, true);
 			}
 		});
 		Button.RIGHT.addButtonListener(new ButtonListener() {
@@ -38,7 +39,8 @@ public class PalancaTest {
 
 			@Override
 			public void buttonPressed(Button b) {
-				motor.rotateTo(-100, true);
+				// motor.rotateTo(-100, true);
+				motor.rotate(10, true);
 			}
 		});
 		while (true) {
