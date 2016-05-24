@@ -27,13 +27,18 @@ public class Avoid implements Behavior {
 
 	@Override
 	public void action() {
+		THBall.timer = 0;
 		suppressed = false;
-		Delay.msDelay(300);
+		// THBall.setSpeed((int) Motor.A.getMaxSpeed());
+		// leftMotor.forward();
+		// rightMotor.forward();
+		THBall.avanzar();
+		Delay.msDelay(1000);
 		THBall.stopMoving();
 		THBall.resetGyro();
 		// retrocede hasta estar a por lo menos 20 cm
 		// de algun obstaculo
-		THBall.atrasar(250);
+		THBall.atrasar((int) (Math.random() * 2750 + 250));
 		turnBy(90.0f);
 	}
 
@@ -57,6 +62,8 @@ public class Avoid implements Behavior {
 			THBall.turnLeft();
 		}
 		while (!suppressed) {
+			Delay.msDelay(1);
+			THBall.timer++;
 			anguloActual = THBall.modAngulo(gdf.getDegrees());
 			if (THBall.inRangeAngle(anguloActual, anguloObjetivo, THBall.ERROR_PERMITIDO_ANGULO)) {
 				THBall.stopMoving();

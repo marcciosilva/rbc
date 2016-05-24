@@ -3,7 +3,7 @@ package main;
 import behaviors.Avanzar;
 import behaviors.Avoid;
 import behaviors.Corregir;
-import behaviors.TengoNaranja;
+import behaviors.EvitarDeadlock;
 import behaviors.TirarAzul;
 import behaviors.TirarNaranja;
 import lejos.nxt.Button;
@@ -21,14 +21,15 @@ import lejos.util.Delay;
 
 public class THBall {
 
+	public static int timer = 0;
 	private static Arbitrator arbitrator;
 	public final static int SPEED_DRIVE = (int) (Motor.A.getMaxSpeed() / 2.0f);
-	public final static int SPEED_TURN = (int) (SPEED_DRIVE / 4.0f);
-	public final static int SPEED_CORRECT = (int) (SPEED_TURN / 4.0f);
+	public final static int SPEED_TURN = (int) (Motor.A.getMaxSpeed() / 8.0f);
+	public final static int SPEED_CORRECT = (int) (Motor.A.getMaxSpeed() / 32.0f);
 	final static int SPEED_CALIBRATION = 18;
 	final static int CATAPULTA_TIRAR = (int) Motor.A.getMaxSpeed();
 	final static int CATAPULTA_MOVER = (int) (CATAPULTA_TIRAR / 10.0f);
-	public final static float ERROR_PERMITIDO_ANGULO = 3.0f;
+	public final static float ERROR_PERMITIDO_ANGULO = 10.0f;
 	// actuadores
 	public static NXTRegulatedMotor leftMotor = Motor.A;
 	public static NXTRegulatedMotor rightMotor = Motor.C;
@@ -74,13 +75,14 @@ public class THBall {
 		Behavior avoid = new Avoid();
 		Behavior corregir = new Corregir();
 		Behavior tirarAzul = new TirarAzul();
-		Behavior tengoNaranja = new TengoNaranja();
+		// Behavior tengoNaranja = new TengoNaranja();
 		Behavior tirarNaranja = new TirarNaranja();
+		Behavior evitarDeadlock = new EvitarDeadlock();
 		// pongo behaviors en orden de prioridad
 		// a mayor indice mayor prioridad
-		Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja };// tirarAzul,
-																			// tirarNaranja
-																			// };
+		Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja, tirarAzul, evitarDeadlock };
+		// tirarNaranja
+		// };
 		// declaro arbitrator
 		arbitrator = new Arbitrator(behaviors);
 	}
@@ -100,13 +102,8 @@ public class THBall {
 	}
 
 	public static void setSpeed(int speed) {
-		if (speed < SPEED_DRIVE) {
-			leftMotor.setSpeed(speed);
-			rightMotor.setSpeed(speed);
-		} else {
-			leftMotor.setSpeed(SPEED_DRIVE);
-			rightMotor.setSpeed(SPEED_DRIVE);
-		}
+		leftMotor.setSpeed(SPEED_DRIVE);
+		rightMotor.setSpeed(SPEED_DRIVE);
 	}
 
 	// public static void turn(int angle) {
@@ -302,13 +299,14 @@ public class THBall {
 	}
 
 	public static void resetGyro() {
-		if (inRange(gdf.getDegrees(), 0.0f, ERROR_PERMITIDO_ANGULO))
+		float error = 30.0f;
+		if (inRangeAngle(gdf.getDegrees(), 0.0f, error))
 			gdf.setDegrees(0.0f);
-		else if (inRange(gdf.getDegrees(), 90.0f, ERROR_PERMITIDO_ANGULO))
+		else if (inRangeAngle(gdf.getDegrees(), 90.0f, error))
 			gdf.setDegrees(90.0f);
-		else if (inRange(gdf.getDegrees(), 180.0f, ERROR_PERMITIDO_ANGULO))
+		else if (inRangeAngle(gdf.getDegrees(), 180.0f, error))
 			gdf.setDegrees(180.0f);
-		else if (inRange(gdf.getDegrees(), 270.0f, ERROR_PERMITIDO_ANGULO))
+		else if (inRangeAngle(gdf.getDegrees(), 270.0f, error))
 			gdf.setDegrees(270.0f);
 	}
 

@@ -1,47 +1,28 @@
 package behaviors;
 
-import lejos.nxt.ColorSensor;
-import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.addon.GyroDirectionFinder;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
 import main.THBall.TurnSide;
 
-public class TirarAzul implements Behavior {
+public class EvitarDeadlock implements Behavior {
 
-	static GyroDirectionFinder gdf = THBall.gdf;
 	static boolean suppressed = false;
-	static ColorSensor colorSensor = THBall.colorSensor;
-	static NXTRegulatedMotor catapulta = THBall.catapulta;
-	static NXTRegulatedMotor leftMotor = THBall.leftMotor;
-	static NXTRegulatedMotor rightMotor = THBall.rightMotor;
-	static int error = 5;
-
-	public static boolean inRange(int min, int max, int value) {
-		// true if value is in range of reference
-		return ((value > min + error || value > min - error) && (value < max + error || value < max - error));
-	}
+	static GyroDirectionFinder gdf = THBall.gdf;
 
 	@Override
 	public boolean takeControl() {
-		suppressed = false;
-		ColorSensor.Color color = colorSensor.getColor();
-		int r = color.getRed();
-		int g = color.getGreen();
-		int b = color.getBlue();
-		// return (inRange(20, 30, r) && inRange(30, 40, g) && inRange(45, 50,
-		// b));
-		return (r >= 75 && g <= 55 && b >= 65);
-		// r = 110 80 95 85
-		// g = 50 30 40 40
-		// b = 90 70 85 85
+		// alrededor de 26 segundos
+		return THBall.timer >= 7500;
 	}
 
 	@Override
 	public void action() {
-		THBall.atrasar(300);
-		THBall.subirCatapulta();
-		THBall.bajarCatapulta();
+		suppressed = false;
+		THBall.timer = 0;
+		THBall.stopMoving();
+		THBall.atrasar((int) (Math.random() * 2750 + 250));
+		turnBy(90.0f);
 	}
 
 	public static void turnBy(float angulo) {
@@ -77,19 +58,12 @@ public class TirarAzul implements Behavior {
 				turnSide = TurnSide.LEFT;
 				THBall.turnLeft();
 			}
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 
 	@Override
 	public void suppress() {
 		suppressed = true;
-		THBall.bajarCatapulta();
 		THBall.stopMoving();
 	}
 

@@ -5,6 +5,7 @@ import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.addon.GyroDirectionFinder;
 import lejos.robotics.subsumption.Behavior;
+import lejos.util.Delay;
 import main.THBall;
 import main.THBall.TurnSide;
 
@@ -33,15 +34,26 @@ public class TengoNaranja implements Behavior {
 		return (r >= 100 && g >= 100 && b >= 40)
 				// return (inRange(85, 115, r) && inRange(85, 120, g) &&
 				// inRange(30, 50, b))
-				&& (!THBall.inRangeAngle(THBall.modAngulo(gdf.getDegrees()), 90.0f, THBall.ERROR_PERMITIDO_ANGULO));
+				&& (!THBall.inRangeAngle(THBall.modAngulo(gdf.getDegrees()), 90.0f, 10.0f));
 	}
 
 	@Override
 	public void action() {
 		suppressed = false;
+		THBall.timer = 0;
 		THBall.stopMoving();
 		THBall.atrasar(250);
-		THBall.turnTo(90.0f);
+		turnTo(90.0f);
+		// float error = 30.0f;
+		// if (THBall.inRangeAngle(gdf.getDegrees(), 0.0f, error)) {
+		// turnBy(90.0f);
+		// } else if (THBall.inRangeAngle(gdf.getDegrees(), 90.0f, error)) {
+		// turnBy(90.0f);
+		// } else if (THBall.inRangeAngle(gdf.getDegrees(), 180.0f, error)) {
+		//
+		// } else if (THBall.inRangeAngle(gdf.getDegrees(), 270.0f, error)) {
+		//
+		// }
 	}
 
 	public static void turnBy(float angulo) {
@@ -64,6 +76,8 @@ public class TengoNaranja implements Behavior {
 			THBall.turnLeft();
 		}
 		while (!suppressed) {
+			Delay.msDelay(1);
+			THBall.timer++;
 			anguloActual = THBall.modAngulo(gdf.getDegrees());
 			if (THBall.inRangeAngle(anguloActual, anguloObjetivo, THBall.ERROR_PERMITIDO_ANGULO)) {
 				THBall.stopMoving();
