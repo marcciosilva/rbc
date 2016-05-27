@@ -32,14 +32,7 @@ public class TirarNaranja implements Behavior {
 		int r = color.getRed();
 		int g = color.getGreen();
 		int b = color.getBlue();
-		// return touchSensor.isPressed() && (inRange(85, 115, r) && inRange(85,
-		// 120, g) && inRange(30, 50, b));
-		// return (inRange(85, 120, r) && inRange(85, 120, g) && inRange(30, 50,
-		// b));
 		return (r >= 100 && g >= 100 && b >= 40);
-		// && THBall.inRangeAngle(THBall.modAngulo(gdf.getDegrees()), 90.0f,
-		// 10.0f)
-		// && (leftTouchSensor.isPressed() && rightTouchSensor.isPressed());
 	}
 
 	@Override
@@ -50,31 +43,17 @@ public class TirarNaranja implements Behavior {
 		THBall.atrasar(250);
 		turnTo(90.0f);
 		THBall.avanzar();
-		while ((!leftTouchSensor.isPressed() && !rightTouchSensor.isPressed()) && !suppressed) {
+		while (!(leftTouchSensor.isPressed() && rightTouchSensor.isPressed()) && !suppressed) {
+			Delay.msDelay(1);
 			THBall.timer++;
-			if (leftTouchSensor.isPressed() && !rightTouchSensor.isPressed()) {
-				// desviado a la derecha
-				THBall.setSpeed(THBall.SPEED_CORRECT);
-				leftMotor.backward();
-				rightMotor.forward();
-			} else if (!leftTouchSensor.isPressed() && rightTouchSensor.isPressed()) {
-				THBall.setSpeed(THBall.SPEED_CORRECT);
-				rightMotor.backward();
-				leftMotor.forward();
-			}
 		}
-		// THBall.atrasar(600);
-		// THBall.tirarPelota();
-		THBall.stopMoving();
-		// THBall.atrasar(250);
-		// turnTo(90.0f);
-		// THBall.avanzar();
-		// while (!leftTouchSensor.isPressed() && !rightTouchSensor.isPressed()
-		// && !suppressed)
-		// ;
-		THBall.atrasar(400);
-		turnTo(270);
-		THBall.tirarPelota();
+		// si el comportamiento no fue suprimido por el evitar deadlock
+		if (!suppressed) {
+			THBall.stopMoving();
+			THBall.atrasar(250);
+			turnTo(270);
+			THBall.tirarPelota();
+		}
 	}
 
 	public static void turnBy(float angulo) {

@@ -13,7 +13,8 @@ public class EvitarDeadlock implements Behavior {
 	@Override
 	public boolean takeControl() {
 		// alrededor de 26 segundos
-		return THBall.timer >= 7500;
+		// return THBall.timer >= 7500;
+		return THBall.timer >= 4000;
 	}
 
 	@Override

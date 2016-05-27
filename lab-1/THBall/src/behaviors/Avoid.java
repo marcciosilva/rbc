@@ -38,7 +38,7 @@ public class Avoid implements Behavior {
 		THBall.resetGyro();
 		// retrocede hasta estar a por lo menos 20 cm
 		// de algun obstaculo
-		THBall.atrasar((int) (Math.random() * 2750 + 250));
+		THBall.atrasar((int) (Math.random() * 1750 + 250));
 		turnBy(90.0f);
 	}
 
