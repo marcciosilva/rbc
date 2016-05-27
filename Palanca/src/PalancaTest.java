@@ -10,7 +10,7 @@ public class PalancaTest {
 	public static void main(String[] args) {
 
 		// primera prueba (de control del actuador)
-		NXTRegulatedMotor motor = new NXTRegulatedMotor(MotorPort.C);
+		NXTRegulatedMotor motor = new NXTRegulatedMotor(MotorPort.B);
 		motor.resetTachoCount();
 		// actuator.moveTo(27, false);
 		LCD.clear();

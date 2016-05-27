@@ -21,10 +21,10 @@ import lejos.util.Delay;
 
 public class THBall {
 
-	public static int timer = 0;
+	public static long timer;
 	private static Arbitrator arbitrator;
 	public final static int SPEED_DRIVE = (int) (Motor.A.getMaxSpeed() / 2.0f);
-	public final static int SPEED_TURN = (int) (Motor.A.getMaxSpeed() / 8.0f);
+	public final static int SPEED_TURN = (int) (Motor.A.getMaxSpeed() / 6.0f);
 	public final static int SPEED_CORRECT = (int) (Motor.A.getMaxSpeed() / 32.0f);
 	final static int SPEED_CALIBRATION = 18;
 	final static int CATAPULTA_TIRAR = (int) Motor.A.getMaxSpeed();
@@ -63,6 +63,7 @@ public class THBall {
 			buttonPressed = Button.readButtons();
 			if ((buttonPressed & Button.ID_ESCAPE) != Button.ID_ESCAPE) {
 				LCD.clear();
+				timer = System.currentTimeMillis();
 				arbitrator.start();
 				exitMenu = true;
 			} else
@@ -102,8 +103,8 @@ public class THBall {
 	}
 
 	public static void setSpeed(int speed) {
-		leftMotor.setSpeed(SPEED_DRIVE);
-		rightMotor.setSpeed(SPEED_DRIVE);
+		leftMotor.setSpeed(speed);
+		rightMotor.setSpeed(speed);
 	}
 
 	// public static void turn(int angle) {
@@ -144,7 +145,7 @@ public class THBall {
 
 	public static void bajarCatapulta() {
 		catapulta.setSpeed(CATAPULTA_MOVER);
-		catapulta.rotateTo(-220, false);
+		catapulta.rotateTo(-200, false);
 	}
 
 	public static void subirCatapulta() {
@@ -169,7 +170,7 @@ public class THBall {
 		// // ;
 		// bajarCatapulta();
 		catapulta.setSpeed(CATAPULTA_TIRAR);
-		catapulta.rotateTo(-90, false);
+		catapulta.rotateTo(-60, false);
 		bajarCatapulta();
 	}
 

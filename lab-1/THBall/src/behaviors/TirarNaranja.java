@@ -5,7 +5,6 @@ import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.addon.GyroDirectionFinder;
 import lejos.robotics.subsumption.Behavior;
-import lejos.util.Delay;
 import main.THBall;
 import main.THBall.TurnSide;
 
@@ -38,14 +37,14 @@ public class TirarNaranja implements Behavior {
 	@Override
 	public void action() {
 		suppressed = false;
-		THBall.timer = 0;
+		THBall.timer = System.currentTimeMillis();
 		THBall.stopMoving();
 		THBall.atrasar(250);
 		turnTo(90.0f);
 		THBall.avanzar();
-		while (!(leftTouchSensor.isPressed() && rightTouchSensor.isPressed()) && !suppressed) {
-			Delay.msDelay(1);
-			THBall.timer++;
+		while ((!leftTouchSensor.isPressed() && !rightTouchSensor.isPressed()) && !suppressed) {
+			// Delay.msDelay(1);
+			// THBall.timer++;
 		}
 		// si el comportamiento no fue suprimido por el evitar deadlock
 		if (!suppressed) {
@@ -76,8 +75,8 @@ public class TirarNaranja implements Behavior {
 			THBall.turnLeft();
 		}
 		while (!suppressed) {
-			Delay.msDelay(1);
-			THBall.timer++;
+			// Delay.msDelay(1);
+			// THBall.timer++;
 			anguloActual = THBall.modAngulo(gdf.getDegrees());
 			if (THBall.inRangeAngle(anguloActual, anguloObjetivo, THBall.ERROR_PERMITIDO_ANGULO)) {
 				THBall.stopMoving();

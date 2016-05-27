@@ -1,7 +1,6 @@
 package behaviors;
 
 import lejos.robotics.subsumption.Behavior;
-import lejos.util.Delay;
 import main.THBall;
 
 public class Avanzar implements Behavior {
@@ -14,11 +13,11 @@ public class Avanzar implements Behavior {
 
 	public void action() {
 		suppressed = false;
-		THBall.timer = 0;
+		THBall.timer = System.currentTimeMillis();
 		THBall.avanzar();
 		while (!suppressed) {
-			Delay.msDelay(1);
-			THBall.timer++;
+			// Delay.msDelay(1);
+			// THBall.timer++;
 			Thread.yield();
 		}
 	}

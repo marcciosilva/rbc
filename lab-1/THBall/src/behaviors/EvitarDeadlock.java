@@ -14,16 +14,16 @@ public class EvitarDeadlock implements Behavior {
 	public boolean takeControl() {
 		// alrededor de 26 segundos
 		// return THBall.timer >= 7500;
-		return THBall.timer >= 4000;
+		return System.currentTimeMillis() - THBall.timer >= 20000;
 	}
 
 	@Override
 	public void action() {
 		suppressed = false;
-		THBall.timer = 0;
 		THBall.stopMoving();
-		THBall.atrasar((int) (Math.random() * 2750 + 250));
+		THBall.atrasar((int) (Math.random() * 1750 + 250));
 		turnBy(90.0f);
+		THBall.timer = System.currentTimeMillis();
 	}
 
 	public static void turnBy(float angulo) {

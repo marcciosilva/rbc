@@ -22,14 +22,17 @@ public class Corregir implements Behavior {
 
 	@Override
 	public void action() {
+		THBall.timer = System.currentTimeMillis();
 		if (leftTouchSensor.isPressed() && !rightTouchSensor.isPressed()) {
 			// desviado a la derecha
 			THBall.setSpeed(THBall.SPEED_CORRECT);
 			leftMotor.backward();
+			// leftMotor.stop();
 			rightMotor.forward();
 		} else if (!leftTouchSensor.isPressed() && rightTouchSensor.isPressed()) {
 			THBall.setSpeed(THBall.SPEED_CORRECT);
 			rightMotor.backward();
+			// rightMotor.stop();
 			leftMotor.forward();
 		}
 	}
