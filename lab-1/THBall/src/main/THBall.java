@@ -1,8 +1,12 @@
 package main;
 
+import java.io.IOException;
+
+import behaviors.Agregacion;
 import behaviors.Avanzar;
 import behaviors.Avoid;
 import behaviors.Corregir;
+import behaviors.Dispersion;
 import behaviors.EvitarDeadlock;
 import behaviors.TirarAzul;
 import behaviors.TirarNaranja;
@@ -15,6 +19,10 @@ import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.addon.GyroDirectionFinder;
 import lejos.nxt.addon.GyroSensor;
+import lejos.nxt.addon.OpticalDistanceSensor;
+import lejos.nxt.comm.Bluetooth;
+import lejos.nxt.comm.RConsole;
+import lejos.nxt.remote.RemoteNXT;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 import lejos.util.Delay;
@@ -35,9 +43,10 @@ public class THBall {
 	public static NXTRegulatedMotor rightMotor = Motor.C;
 	public static NXTRegulatedMotor catapulta = Motor.B;
 	// sensores
-	// public static OpticalDistanceSensor largaDistancia = new
+	public static RemoteNXT remoteNxt;
+	public static OpticalDistanceSensor largaDistancia;
 	// OpticalDistanceSensor(SensorPort.S1);
-	// public static OpticalDistanceSensor cortaDistancia = new
+	public static OpticalDistanceSensor cortaDistancia;
 	// OpticalDistanceSensor(SensorPort.S4);
 	public static GyroSensor gyro = new GyroSensor(SensorPort.S1);
 	// LCD.drawString("Calibrando", 0, 0);
@@ -78,10 +87,13 @@ public class THBall {
 		Behavior tirarAzul = new TirarAzul();
 		// Behavior tengoNaranja = new TengoNaranja();
 		Behavior tirarNaranja = new TirarNaranja();
+		Behavior dispersion = new Dispersion();
+		Behavior agregacion = new Agregacion();
 		Behavior evitarDeadlock = new EvitarDeadlock();
 		// pongo behaviors en orden de prioridad
 		// a mayor indice mayor prioridad
-		Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja, tirarAzul, evitarDeadlock };
+		Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja, tirarAzul,
+				evitarDeadlock, dispersion, agregacion };
 		// tirarNaranja
 		// };
 		// declaro arbitrator
@@ -135,6 +147,18 @@ public class THBall {
 	// }
 
 	public static void inicializar() {
+		// largaDistancia = null;
+		// cortaDistancia = null;
+		try {
+			remoteNxt = new RemoteNXT("rbc4_2", Bluetooth.getConnector());
+			largaDistancia = new OpticalDistanceSensor(remoteNxt.S1);
+			cortaDistancia = new OpticalDistanceSensor(remoteNxt.S2);
+			RConsole.openAny(10000);
+		} catch (IOException e) {
+			LCD.clear();
+			LCD.drawString(e.getMessage(), 0, 0);
+			System.exit(1);
+		}
 		gdf = new GyroDirectionFinder(gyro, true);
 		Delay.msDelay(5000);
 		// gdf.setDegreesCartesian(0.0f);
@@ -145,7 +169,7 @@ public class THBall {
 
 	public static void bajarCatapulta() {
 		catapulta.setSpeed(CATAPULTA_MOVER);
-		catapulta.rotateTo(-200, false);
+		catapulta.rotateTo(-190, false);
 	}
 
 	public static void subirCatapulta() {
@@ -258,10 +282,12 @@ public class THBall {
 				stopMoving();
 				break;
 			}
-			if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
+			if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT)
+					&& (turnSide != TurnSide.RIGHT)) {
 				turnSide = TurnSide.RIGHT;
 				turnRight();
-			} else if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT) && turnSide != TurnSide.LEFT) {
+			} else if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)
+					&& turnSide != TurnSide.LEFT) {
 				turnSide = TurnSide.LEFT;
 				turnLeft();
 			}
@@ -275,10 +301,12 @@ public class THBall {
 
 	public static boolean inRange(float valorActual, float valorEsperado, float error) {
 		// true if value is in range of reference
-		return ((valorActual <= valorEsperado + error) && (valorActual >= valorEsperado - error));
+		return ((valorActual <= valorEsperado + error)
+				&& (valorActual >= valorEsperado - error));
 	}
 
-	public static boolean inRangeAngle(float valorActual, float valorEsperado, float error) {
+	public static boolean inRangeAngle(float valorActual, float valorEsperado,
+			float error) {
 		// true if value is in range of reference
 		valorActual = modAngulo(valorActual);
 		valorEsperado = modAngulo(valorEsperado);
@@ -309,6 +337,12 @@ public class THBall {
 			gdf.setDegrees(180.0f);
 		else if (inRangeAngle(gdf.getDegrees(), 270.0f, error))
 			gdf.setDegrees(270.0f);
+	}
+
+	public static void atrasar() {
+		setSpeed(SPEED_DRIVE);
+		leftMotor.backward();
+		rightMotor.backward();
 	}
 
 }

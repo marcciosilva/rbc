@@ -3,6 +3,7 @@ package behaviors;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.addon.GyroDirectionFinder;
+import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
 import lejos.util.Delay;
 import main.THBall;
@@ -27,6 +28,7 @@ public class Avoid implements Behavior {
 
 	@Override
 	public void action() {
+		RConsole.println("Ejecutando Avoid");
 		THBall.timer = System.currentTimeMillis();
 		suppressed = false;
 		// THBall.setSpeed((int) Motor.A.getMaxSpeed());
@@ -65,15 +67,17 @@ public class Avoid implements Behavior {
 			// Delay.msDelay(1);
 			// THBall.timer++;
 			anguloActual = THBall.modAngulo(gdf.getDegrees());
-			if (THBall.inRangeAngle(anguloActual, anguloObjetivo, THBall.ERROR_PERMITIDO_ANGULO)) {
+			if (THBall.inRangeAngle(anguloActual, anguloObjetivo,
+					THBall.ERROR_PERMITIDO_ANGULO)) {
 				THBall.stopMoving();
 				break;
 			}
-			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
+			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT)
+					&& (turnSide != TurnSide.RIGHT)) {
 				turnSide = TurnSide.RIGHT;
 				THBall.turnRight();
-			} else if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)
-					&& turnSide != TurnSide.LEFT) {
+			} else if ((THBall.FindTurnSide(anguloActual,
+					anguloObjetivo) == TurnSide.LEFT) && turnSide != TurnSide.LEFT) {
 				turnSide = TurnSide.LEFT;
 				THBall.turnLeft();
 			}

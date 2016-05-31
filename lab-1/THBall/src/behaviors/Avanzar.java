@@ -1,5 +1,6 @@
 package behaviors;
 
+import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
 
@@ -18,6 +19,7 @@ public class Avanzar implements Behavior {
 		while (!suppressed) {
 			// Delay.msDelay(1);
 			// THBall.timer++;
+			RConsole.println("Ejecutando Avanzar");
 			Thread.yield();
 		}
 	}

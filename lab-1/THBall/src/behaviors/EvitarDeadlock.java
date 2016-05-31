@@ -1,6 +1,7 @@
 package behaviors;
 
 import lejos.nxt.addon.GyroDirectionFinder;
+import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
 import main.THBall.TurnSide;
@@ -19,6 +20,7 @@ public class EvitarDeadlock implements Behavior {
 
 	@Override
 	public void action() {
+		RConsole.println("Ejecutando Evitar Deadlock");
 		suppressed = false;
 		THBall.stopMoving();
 		THBall.atrasar((int) (Math.random() * 1750 + 250));
@@ -47,15 +49,17 @@ public class EvitarDeadlock implements Behavior {
 		}
 		while (!suppressed) {
 			anguloActual = THBall.modAngulo(gdf.getDegrees());
-			if (THBall.inRangeAngle(anguloActual, anguloObjetivo, THBall.ERROR_PERMITIDO_ANGULO)) {
+			if (THBall.inRangeAngle(anguloActual, anguloObjetivo,
+					THBall.ERROR_PERMITIDO_ANGULO)) {
 				THBall.stopMoving();
 				break;
 			}
-			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
+			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT)
+					&& (turnSide != TurnSide.RIGHT)) {
 				turnSide = TurnSide.RIGHT;
 				THBall.turnRight();
-			} else if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)
-					&& turnSide != TurnSide.LEFT) {
+			} else if ((THBall.FindTurnSide(anguloActual,
+					anguloObjetivo) == TurnSide.LEFT) && turnSide != TurnSide.LEFT) {
 				turnSide = TurnSide.LEFT;
 				THBall.turnLeft();
 			}
