@@ -13,13 +13,13 @@ public class Avanzar implements Behavior {
 	}
 
 	public void action() {
+		RConsole.println("Ejecutando Avanzar");
 		suppressed = false;
 		THBall.timer = System.currentTimeMillis();
 		THBall.avanzar();
 		while (!suppressed) {
 			// Delay.msDelay(1);
 			// THBall.timer++;
-			RConsole.println("Ejecutando Avanzar");
 			Thread.yield();
 		}
 	}

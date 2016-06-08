@@ -1,15 +1,10 @@
 package main;
 
 import java.io.IOException;
+import java.util.Queue;
 
 import behaviors.Agregacion;
-import behaviors.Avanzar;
-import behaviors.Avoid;
-import behaviors.Corregir;
 import behaviors.Dispersion;
-import behaviors.EvitarDeadlock;
-import behaviors.TirarAzul;
-import behaviors.TirarNaranja;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
@@ -29,6 +24,7 @@ import lejos.util.Delay;
 
 public class THBall {
 
+	// public static NXTCam cam;
 	public static long timer;
 	private static Arbitrator arbitrator;
 	public final static int SPEED_DRIVE = (int) (Motor.A.getMaxSpeed() / 2.0f);
@@ -47,7 +43,10 @@ public class THBall {
 	public static OpticalDistanceSensor largaDistancia;
 	// OpticalDistanceSensor(SensorPort.S1);
 	public static OpticalDistanceSensor cortaDistancia;
+	public static Queue<Integer> largaDistanciaQueue = new Queue<>();
+	public static Queue<Integer> cortaDistanciaQueue = new Queue<>();
 	// OpticalDistanceSensor(SensorPort.S4);
+
 	public static GyroSensor gyro = new GyroSensor(SensorPort.S1);
 	// LCD.drawString("Calibrando", 0, 0);
 	public static GyroDirectionFinder gdf;
@@ -81,19 +80,21 @@ public class THBall {
 	}
 
 	private static void setupBehaviors() {
-		Behavior avanzar = new Avanzar();
-		Behavior avoid = new Avoid();
-		Behavior corregir = new Corregir();
-		Behavior tirarAzul = new TirarAzul();
-		// Behavior tengoNaranja = new TengoNaranja();
-		Behavior tirarNaranja = new TirarNaranja();
+		// Behavior avanzar = new Avanzar();
+		// Behavior avoid = new Avoid();
+		// Behavior corregir = new Corregir();
+		// Behavior tirarAzul = new TirarAzul();
+		// // Behavior tengoNaranja = new TengoNaranja();
+		// Behavior tirarNaranja = new TirarNaranja();
 		Behavior dispersion = new Dispersion();
 		Behavior agregacion = new Agregacion();
-		Behavior evitarDeadlock = new EvitarDeadlock();
+		// Behavior evitarDeadlock = new EvitarDeadlock();
 		// pongo behaviors en orden de prioridad
 		// a mayor indice mayor prioridad
-		Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja, tirarAzul,
-				evitarDeadlock, dispersion, agregacion };
+		Behavior behaviors[] = { /*
+									 * avanzar, corregir, avoid, tirarNaranja,
+									 * tirarAzul, evitarDeadlock,
+									 */dispersion, agregacion };
 		// tirarNaranja
 		// };
 		// declaro arbitrator
@@ -153,7 +154,34 @@ public class THBall {
 			remoteNxt = new RemoteNXT("rbc4_2", Bluetooth.getConnector());
 			largaDistancia = new OpticalDistanceSensor(remoteNxt.S1);
 			cortaDistancia = new OpticalDistanceSensor(remoteNxt.S2);
+			// cam = new NXTCam(remoteNxt.S2);
+			// cam = new NXTCam(SensorPort.S2);
+			// // cam.sendCommand('B'); // object tracking mode
+			// cam.sendCommand('A'); // sort by size
+			// cam.sendCommand('E'); // enable tracking
 			RConsole.openAny(10000);
+			(new Thread() {
+
+				@Override
+				public void run() {
+					while (true) {
+						if (largaDistanciaQueue.size() == 10)
+							largaDistanciaQueue.pop();
+						largaDistanciaQueue.push(largaDistancia.getDistance());
+						if (cortaDistanciaQueue.size() == 10)
+							cortaDistanciaQueue.pop();
+						cortaDistanciaQueue.push(cortaDistancia.getDistance());
+						int cortaDistanciaPromedio;
+						int largaDistanciaPromedio;
+						for (int val : cortaDistanciaQueue.elements()) {
+
+						}
+
+					}
+				}
+
+			}).start();
+
 		} catch (IOException e) {
 			LCD.clear();
 			LCD.drawString(e.getMessage(), 0, 0);
@@ -343,6 +371,21 @@ public class THBall {
 		setSpeed(SPEED_DRIVE);
 		leftMotor.backward();
 		rightMotor.backward();
+	}
+
+	/***
+	 * Devuelve un promedio de 10 mediciones del sensor pasado por parametro
+	 * 
+	 * @param sensor
+	 * @return
+	 */
+	public static int getSharpDistance(OpticalDistanceSensor sensor) {
+		// return sensor.getDistance();
+		float promedio = 0.0f;
+		for (int i = 0; i < 10; i++) {
+			promedio += sensor.getDistance();
+		}
+		return (int) (promedio / 10.0f);
 	}
 
 }
