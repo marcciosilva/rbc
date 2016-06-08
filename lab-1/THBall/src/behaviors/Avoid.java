@@ -1,6 +1,5 @@
 package behaviors;
 
-import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.addon.GyroDirectionFinder;
 import lejos.nxt.comm.RConsole;
@@ -11,14 +10,9 @@ import main.THBall.TurnSide;
 
 public class Avoid implements Behavior {
 
-	// static OpticalDistanceSensor largaDistancia = THBall.largaDistancia;
-	// static OpticalDistanceSensor cortaDistancia = THBall.cortaDistancia;
 	static GyroDirectionFinder gdf = THBall.gdf;
 	static TouchSensor leftTouchSensor = THBall.leftTouchSensor;
 	static TouchSensor rightTouchSensor = THBall.rightTouchSensor;
-	static NXTRegulatedMotor leftMotor = THBall.leftMotor;
-	static NXTRegulatedMotor rightMotor = THBall.rightMotor;
-	static NXTRegulatedMotor catapulta = THBall.catapulta;
 	static boolean suppressed = false;
 
 	@Override
@@ -31,9 +25,6 @@ public class Avoid implements Behavior {
 		RConsole.println("Ejecutando Avoid");
 		THBall.timer = System.currentTimeMillis();
 		suppressed = false;
-		// THBall.setSpeed((int) Motor.A.getMaxSpeed());
-		// leftMotor.forward();
-		// rightMotor.forward();
 		THBall.avanzar();
 		Delay.msDelay(1000);
 		THBall.stopMoving();
@@ -51,35 +42,32 @@ public class Avoid implements Behavior {
 	}
 
 	public static void turnTo(float anguloObjetivo) {
-		THBall.setSpeed(THBall.SPEED_TURN);
 		float anguloActual = THBall.modAngulo(gdf.getDegrees());
 		// por si me pasan un valor de afuera y no desde turnBy
 		anguloObjetivo = THBall.modAngulo(anguloObjetivo);
 		TurnSide turnSide;
 		if (THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) {
 			turnSide = TurnSide.RIGHT;
-			THBall.turnRight();
+			THBall.turnRight(THBall.SPEED_TURN);
 		} else {
 			turnSide = TurnSide.LEFT;
-			THBall.turnLeft();
+			THBall.turnLeft(THBall.SPEED_TURN);
 		}
 		while (!suppressed) {
 			// Delay.msDelay(1);
 			// THBall.timer++;
 			anguloActual = THBall.modAngulo(gdf.getDegrees());
-			if (THBall.inRangeAngle(anguloActual, anguloObjetivo,
-					THBall.ERROR_PERMITIDO_ANGULO)) {
+			if (THBall.inRangeAngle(anguloActual, anguloObjetivo, THBall.ERROR_PERMITIDO_ANGULO)) {
 				THBall.stopMoving();
 				break;
 			}
-			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT)
-					&& (turnSide != TurnSide.RIGHT)) {
+			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
 				turnSide = TurnSide.RIGHT;
-				THBall.turnRight();
-			} else if ((THBall.FindTurnSide(anguloActual,
-					anguloObjetivo) == TurnSide.LEFT) && turnSide != TurnSide.LEFT) {
+				THBall.turnRight(THBall.SPEED_TURN);
+			} else if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)
+					&& turnSide != TurnSide.LEFT) {
 				turnSide = TurnSide.LEFT;
-				THBall.turnLeft();
+				THBall.turnLeft(THBall.SPEED_TURN);
 			}
 		}
 	}

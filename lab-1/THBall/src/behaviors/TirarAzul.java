@@ -29,12 +29,7 @@ public class TirarAzul implements Behavior {
 		int r = color.getRed();
 		int g = color.getGreen();
 		int b = color.getBlue();
-		// return (inRange(20, 30, r) && inRange(30, 40, g) && inRange(45, 50,
-		// b));
 		return (r >= 75 && g <= 55 && b >= 65);
-		// r = 110 80 95 85
-		// g = 50 30 40 40
-		// b = 90 70 85 85
 	}
 
 	@Override
@@ -51,17 +46,16 @@ public class TirarAzul implements Behavior {
 	}
 
 	public static void turnTo(float anguloObjetivo) {
-		THBall.setSpeed(THBall.SPEED_TURN);
 		float anguloActual = THBall.modAngulo(gdf.getDegrees());
 		// por si me pasan un valor de afuera y no desde turnBy
 		anguloObjetivo = THBall.modAngulo(anguloObjetivo);
 		TurnSide turnSide;
 		if (THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) {
 			turnSide = TurnSide.RIGHT;
-			THBall.turnRight();
+			THBall.turnRight(THBall.SPEED_TURN);
 		} else {
 			turnSide = TurnSide.LEFT;
-			THBall.turnLeft();
+			THBall.turnLeft(THBall.SPEED_TURN);
 		}
 		while (!suppressed) {
 			anguloActual = THBall.modAngulo(gdf.getDegrees());
@@ -71,16 +65,15 @@ public class TirarAzul implements Behavior {
 			}
 			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
 				turnSide = TurnSide.RIGHT;
-				THBall.turnRight();
+				THBall.turnRight(THBall.SPEED_TURN);
 			} else if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)
 					&& turnSide != TurnSide.LEFT) {
 				turnSide = TurnSide.LEFT;
-				THBall.turnLeft();
+				THBall.turnLeft(THBall.SPEED_TURN);
 			}
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

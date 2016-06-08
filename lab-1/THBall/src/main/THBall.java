@@ -1,7 +1,10 @@
 package main;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import behaviors.Agregacion;
 import behaviors.Dispersion;
@@ -43,8 +46,13 @@ public class THBall {
 	public static OpticalDistanceSensor largaDistancia;
 	// OpticalDistanceSensor(SensorPort.S1);
 	public static OpticalDistanceSensor cortaDistancia;
-	public static Queue<Integer> largaDistanciaQueue = new Queue<>();
-	public static Queue<Integer> cortaDistanciaQueue = new Queue<>();
+	public static Queue<Integer> largaDistanciaQueue = new LinkedList<Integer>();
+	public static Queue<Integer> cortaDistanciaQueue = new LinkedList<Integer>();
+	// promedios
+	public static final Lock lockLargaDistanciaPromedio = new ReentrantLock();
+	public static int largaDistanciaPromedio = 0;
+	public static final Lock lockCortaDistanciaPromedio = new ReentrantLock();
+	public static int cortaDistanciaPromedio = 0;
 	// OpticalDistanceSensor(SensorPort.S4);
 
 	public static GyroSensor gyro = new GyroSensor(SensorPort.S1);
@@ -79,6 +87,9 @@ public class THBall {
 		}
 	}
 
+	/**
+	 * Inicializa comportamientos y arbitrator
+	 */
 	private static void setupBehaviors() {
 		// Behavior avanzar = new Avanzar();
 		// Behavior avoid = new Avoid();
@@ -101,52 +112,25 @@ public class THBall {
 		arbitrator = new Arbitrator(behaviors);
 	}
 
-	public static void sleep(int tiempo) {
-		try {
-			Thread.sleep(tiempo);
-		} catch (InterruptedException e) {
-			LCD.clear();
-			LCD.drawString(e.getMessage(), 0, 0);
-		}
-	}
-
+	/**
+	 * El robot deja de moverse
+	 */
 	public static void stopMoving() {
 		leftMotor.stop();
 		rightMotor.stop();
 	}
 
+	/**
+	 * Establece la velocidad de los motores de movilidad
+	 */
 	public static void setSpeed(int speed) {
 		leftMotor.setSpeed(speed);
 		rightMotor.setSpeed(speed);
 	}
 
-	// public static void turn(int angle) {
-	// int numDegrees = (int) Math.abs(Math.round(angle * conversionAngles));
-	// // set motors up for counter-clockwise rotation
-	// NXTRegulatedMotor forwardMotor = leftMotor;
-	// NXTRegulatedMotor backwardMotor = rightMotor;
-	// // if angle is negative, switch motors for clockwise rotation
-	// if (angle < 0) {
-	// forwardMotor = rightMotor;
-	// backwardMotor = leftMotor;
-	// }
-	// forwardMotor.resetTachoCount();
-	// backwardMotor.resetTachoCount();
-	// forwardMotor.forward();
-	// backwardMotor.backward();
-	// while (((forwardMotor.getTachoCount() < numDegrees) ||
-	// (backwardMotor.getTachoCount() > -numDegrees))) {
-	// if (forwardMotor.getTachoCount() > numDegrees)
-	// forwardMotor.stop();
-	// if (backwardMotor.getTachoCount() < -numDegrees)
-	// backwardMotor.stop();
-	// // Thread.yield();
-	// // sleep(50);
-	// }
-	// forwardMotor.stop();
-	// backwardMotor.stop();
-	// }
-
+	/**
+	 * Inicializa sensores remotos y threads de polling a sensores de distancia
+	 */
 	public static void inicializar() {
 		// largaDistancia = null;
 		// cortaDistancia = null;
@@ -160,26 +144,63 @@ public class THBall {
 			// cam.sendCommand('A'); // sort by size
 			// cam.sendCommand('E'); // enable tracking
 			RConsole.openAny(10000);
+			// inicializo threads para promediar medidas de los sharps
 			(new Thread() {
+				float promedioLocal = 0.0f;
+				int cantMediciones = 10;
 
 				@Override
 				public void run() {
 					while (true) {
-						if (largaDistanciaQueue.size() == 10)
-							largaDistanciaQueue.pop();
-						largaDistanciaQueue.push(largaDistancia.getDistance());
-						if (cortaDistanciaQueue.size() == 10)
-							cortaDistanciaQueue.pop();
-						cortaDistanciaQueue.push(cortaDistancia.getDistance());
-						int cortaDistanciaPromedio;
-						int largaDistanciaPromedio;
-						for (int val : cortaDistanciaQueue.elements()) {
-
+						if (THBall.largaDistanciaQueue.size() == cantMediciones)
+							// saco un elemento
+							THBall.largaDistanciaQueue.poll();
+						// agrego una medida de uno de los sharps
+						THBall.largaDistanciaQueue.add(largaDistancia.getDistance());
+						// calculo nuevo promedio
+						promedioLocal = 0.0f;
+						for (int val : THBall.largaDistanciaQueue) {
+							promedioLocal += val;
+						}
+						promedioLocal /= THBall.largaDistanciaQueue.size();
+						try {
+							THBall.lockLargaDistanciaPromedio.lock();
+							THBall.largaDistanciaPromedio = (int) promedioLocal;
+						} finally {
+							THBall.lockLargaDistanciaPromedio.unlock();
 						}
 
 					}
 				}
+			}).start();
 
+			(new Thread() {
+				float promedioLocal = 0.0f;
+				int cantMediciones = 10;
+
+				@Override
+				public void run() {
+					while (true) {
+						if (THBall.cortaDistanciaQueue.size() == cantMediciones)
+							// saco un elemento
+							THBall.cortaDistanciaQueue.poll();
+						// agrego una medida de uno de los sharps
+						THBall.cortaDistanciaQueue.add(cortaDistancia.getDistance());
+						// calculo nuevo promedio
+						promedioLocal = 0.0f;
+						for (int val : THBall.cortaDistanciaQueue) {
+							promedioLocal += val;
+						}
+						promedioLocal /= THBall.cortaDistanciaQueue.size();
+						try {
+							THBall.lockCortaDistanciaPromedio.lock();
+							THBall.cortaDistanciaPromedio = (int) promedioLocal;
+						} finally {
+							THBall.lockCortaDistanciaPromedio.unlock();
+						}
+
+					}
+				}
 			}).start();
 
 		} catch (IOException e) {
@@ -195,55 +216,58 @@ public class THBall {
 		bajarCatapulta();
 	}
 
+	/**
+	 * Baja la catapulta hacia la posicion de recoleccion
+	 */
 	public static void bajarCatapulta() {
 		catapulta.setSpeed(CATAPULTA_MOVER);
 		catapulta.rotateTo(-190, false);
 	}
 
+	/**
+	 * Sube la catapulta hacia la posicion de origen
+	 */
 	public static void subirCatapulta() {
 		catapulta.setSpeed(CATAPULTA_MOVER);
 		catapulta.rotateTo(0, false);
 	}
 
+	/**
+	 * Se mueve la catapulta mediante la cantidad de grados indicados por
+	 * parametro
+	 * 
+	 * @param angle
+	 *            Cantidad de grados a mover
+	 */
 	public static void moverCatapulta(int angle) {
 		catapulta.setSpeed(CATAPULTA_MOVER);
 		catapulta.rotateTo(angle, false);
 	}
 
+	/**
+	 * El robot arroja la pelota
+	 */
 	public static void tirarPelota() {
-		// catapulta.setSpeed(CATAPULTA_MOVER);
-		// // catapulta.rotateTo(5, false);
-		// catapulta.rotateTo(-70, false);
-		// // while (catapulta.isMoving())
-		// // ;
-		// catapulta.setSpeed(CATAPULTA_TIRAR);
-		// catapulta.rotateTo(-170, false);
-		// // while (catapulta.isMoving())
-		// // ;
-		// bajarCatapulta();
 		catapulta.setSpeed(CATAPULTA_TIRAR);
 		catapulta.rotateTo(-60, false);
 		bajarCatapulta();
 	}
 
-	// public static void girarRandom() {
-	// try {
-	// double sign = Math.random();
-	// if (sign > 0.5)
-	// THBall.turn((int) (Math.random() * 180));
-	// else
-	// THBall.turn((int) (-Math.random() * 180));
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-
+	/**
+	 * El robot avanza a velocidad SPEED_DRIVE
+	 */
 	public static void avanzar() {
 		setSpeed(SPEED_DRIVE);
 		leftMotor.forward();
 		rightMotor.forward();
 	}
 
+	/**
+	 * El robot retrocede durante la cantidad de tiempo indicada por parametro
+	 * 
+	 * @param ms
+	 *            Cantidad de milisegundos
+	 */
 	public static void atrasar(int ms) {
 		setSpeed(SPEED_DRIVE);
 		leftMotor.backward();
@@ -253,17 +277,12 @@ public class THBall {
 	}
 
 	/**
-	 * Viaja durante los milisegundos que se le pasen
+	 * Dado un angulo, lo mapea al intervalo 0-360
 	 * 
-	 * @param i
+	 * @param angulo
+	 *            Angulo
+	 * @return Se devuelve el angulo convertido
 	 */
-	// public static void travelFor(int miliseconds) {
-	// THBall.setSpeed(SPEED_DRIVE);
-	// avanzar();
-	// Delay.msDelay(miliseconds);
-	// stopMoving();
-	// }
-
 	public static float modAngulo(float angulo) {
 		angulo = angulo % 360.0f;
 		if (angulo < 0)
@@ -271,10 +290,26 @@ public class THBall {
 		return angulo % 360.0f;
 	}
 
+	/**
+	 * Enumerado que indica sentido de rotacion
+	 * 
+	 * @author marccio
+	 *
+	 */
 	public static enum TurnSide {
 		RIGHT, LEFT
 	}
 
+	/**
+	 * Dado un angulo actual y un angulo objetivo, se determina si hay que girar
+	 * hacia la izquierda o derecha para alcanzarlo
+	 * 
+	 * @param current
+	 *            Angulo actual
+	 * @param target
+	 *            Angulo objetivo
+	 * @return
+	 */
 	public static TurnSide FindTurnSide(float current, float target) {
 		float diff = target - current;
 		if (diff < 0.0f)
@@ -285,12 +320,24 @@ public class THBall {
 			return TurnSide.RIGHT;
 	}
 
+	/**
+	 * Gira la cantidad de grados indicada por parametro
+	 * 
+	 * @param angulo
+	 *            Cantidad de grados a girar
+	 */
 	public static void turnBy(float angulo) {
 		float anguloActual = modAngulo(gdf.getDegrees());
 		float anguloObjetivo = anguloActual + modAngulo(angulo);
 		turnTo(anguloObjetivo);
 	}
 
+	/**
+	 * Rota hacia el angulo objetivo
+	 * 
+	 * @param anguloObjetivo
+	 *            Angulo objetivo
+	 */
 	public static void turnTo(float anguloObjetivo) {
 		setSpeed(SPEED_TURN);
 		float anguloActual = modAngulo(gdf.getDegrees());
@@ -299,10 +346,10 @@ public class THBall {
 		TurnSide turnSide;
 		if (FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) {
 			turnSide = TurnSide.RIGHT;
-			turnRight();
+			turnRight(SPEED_TURN);
 		} else {
 			turnSide = TurnSide.LEFT;
-			turnLeft();
+			turnLeft(SPEED_TURN);
 		}
 		while (true) {
 			anguloActual = modAngulo(gdf.getDegrees());
@@ -310,14 +357,12 @@ public class THBall {
 				stopMoving();
 				break;
 			}
-			if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT)
-					&& (turnSide != TurnSide.RIGHT)) {
+			if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
 				turnSide = TurnSide.RIGHT;
-				turnRight();
-			} else if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)
-					&& turnSide != TurnSide.LEFT) {
+				turnRight(SPEED_TURN);
+			} else if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT) && turnSide != TurnSide.LEFT) {
 				turnSide = TurnSide.LEFT;
-				turnLeft();
+				turnLeft(SPEED_TURN);
 			}
 			try {
 				Thread.sleep(50);
@@ -327,14 +372,36 @@ public class THBall {
 		}
 	}
 
+	/***
+	 * Determina si la medida actual esta en un rango de tolerancia de una
+	 * medida esperada
+	 * 
+	 * @param valorActual
+	 *            Medida actual
+	 * @param valorEsperado
+	 *            Medida esperada
+	 * @param error
+	 *            Tolerancia
+	 * @return True si se esta en rango, False en otro caso
+	 */
 	public static boolean inRange(float valorActual, float valorEsperado, float error) {
 		// true if value is in range of reference
-		return ((valorActual <= valorEsperado + error)
-				&& (valorActual >= valorEsperado - error));
+		return ((valorActual <= valorEsperado + error) && (valorActual >= valorEsperado - error));
 	}
 
-	public static boolean inRangeAngle(float valorActual, float valorEsperado,
-			float error) {
+	/***
+	 * Determina si el angulo actual esta en un rango de tolerancia de un angulo
+	 * esperado
+	 * 
+	 * @param valorActual
+	 *            Angulo actual
+	 * @param valorEsperado
+	 *            Angulo esperado
+	 * @param error
+	 *            Tolerancia
+	 * @return True si se esta en rango, False en otro caso
+	 */
+	public static boolean inRangeAngle(float valorActual, float valorEsperado, float error) {
 		// true if value is in range of reference
 		valorActual = modAngulo(valorActual);
 		valorEsperado = modAngulo(valorEsperado);
@@ -343,18 +410,36 @@ public class THBall {
 		return (Math.abs(smallestDifference) <= error);
 	}
 
-	public static void turnRight() {
-		setSpeed(SPEED_TURN);
+	/***
+	 * Gira hacia la derecha seteando la velocidad de los motores de acuerdo al
+	 * parametro speed
+	 * 
+	 * @param speed
+	 *            Nueva velocidad de los motores
+	 */
+	public static void turnRight(int speed) {
+		setSpeed(speed);
 		leftMotor.forward();
 		rightMotor.backward();
 	}
 
-	public static void turnLeft() {
-		setSpeed(SPEED_TURN);
+	/***
+	 * Gira hacia la izquierda seteando la velocidad de los motores de acuerdo
+	 * al parametro speed
+	 * 
+	 * @param speed
+	 *            Nueva velocidad de los motores
+	 */
+	public static void turnLeft(int speed) {
+		setSpeed(speed);
 		rightMotor.forward();
 		leftMotor.backward();
 	}
 
+	/***
+	 * Resetea el heading del gyroDirectionFinder de acuerdo al angulo al cual
+	 * deberia estar apuntando
+	 */
 	public static void resetGyro() {
 		float error = 30.0f;
 		if (inRangeAngle(gdf.getDegrees(), 0.0f, error))
@@ -367,6 +452,9 @@ public class THBall {
 			gdf.setDegrees(270.0f);
 	}
 
+	/***
+	 * El robot se mueve hacia atras a velocidad SPEED_DRIVE
+	 */
 	public static void atrasar() {
 		setSpeed(SPEED_DRIVE);
 		leftMotor.backward();
@@ -377,15 +465,24 @@ public class THBall {
 	 * Devuelve un promedio de 10 mediciones del sensor pasado por parametro
 	 * 
 	 * @param sensor
-	 * @return
+	 *            Sensor a partir del cual se obtiene medicion
+	 * @return Promedio
 	 */
 	public static int getSharpDistance(OpticalDistanceSensor sensor) {
 		// return sensor.getDistance();
-		float promedio = 0.0f;
-		for (int i = 0; i < 10; i++) {
-			promedio += sensor.getDistance();
+		int address = sensor.getAddress();
+		int returnVal = -1;
+		// capaz hay que meter algun try aca por si failea algun lock
+		if (address == largaDistancia.getAddress()) {
+			THBall.lockLargaDistanciaPromedio.lock();
+			returnVal = THBall.largaDistanciaPromedio;
+			THBall.lockLargaDistanciaPromedio.unlock();
+		} else if (address == cortaDistancia.getAddress()) {
+			THBall.lockCortaDistanciaPromedio.lock();
+			returnVal = THBall.cortaDistanciaPromedio;
+			THBall.lockCortaDistanciaPromedio.unlock();
 		}
-		return (int) (promedio / 10.0f);
+		return returnVal;
 	}
 
 }

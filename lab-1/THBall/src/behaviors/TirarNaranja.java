@@ -69,10 +69,10 @@ public class TirarNaranja implements Behavior {
 		TurnSide turnSide;
 		if (THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) {
 			turnSide = TurnSide.RIGHT;
-			THBall.turnRight();
+			THBall.turnRight(THBall.SPEED_TURN);
 		} else {
 			turnSide = TurnSide.LEFT;
-			THBall.turnLeft();
+			THBall.turnLeft(THBall.SPEED_TURN);
 		}
 		while (!suppressed) {
 			// Delay.msDelay(1);
@@ -84,11 +84,11 @@ public class TirarNaranja implements Behavior {
 			}
 			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
 				turnSide = TurnSide.RIGHT;
-				THBall.turnRight();
+				THBall.turnRight(THBall.SPEED_TURN);
 			} else if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)
 					&& turnSide != TurnSide.LEFT) {
 				turnSide = TurnSide.LEFT;
-				THBall.turnLeft();
+				THBall.turnLeft(THBall.SPEED_TURN);
 			}
 		}
 	}

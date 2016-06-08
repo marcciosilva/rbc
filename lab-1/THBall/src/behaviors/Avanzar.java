@@ -18,8 +18,6 @@ public class Avanzar implements Behavior {
 		THBall.timer = System.currentTimeMillis();
 		THBall.avanzar();
 		while (!suppressed) {
-			// Delay.msDelay(1);
-			// THBall.timer++;
 			Thread.yield();
 		}
 	}

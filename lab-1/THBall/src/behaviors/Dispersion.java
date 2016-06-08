@@ -1,20 +1,14 @@
 package behaviors;
 
-import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.addon.OpticalDistanceSensor;
-import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
 
 public class Dispersion implements Behavior {
 
-	static NXTRegulatedMotor leftMotor = THBall.leftMotor;
-	static NXTRegulatedMotor rightMotor = THBall.rightMotor;
 	static OpticalDistanceSensor largaDistancia = THBall.largaDistancia;
 	static OpticalDistanceSensor cortaDistancia = THBall.cortaDistancia;
 	static boolean suppressed = false;
-	// static NXTCam cam = THBall.cam;
-	int medidaLarga, medidaCorta;
 
 	@Override
 	public boolean takeControl() {
@@ -49,8 +43,6 @@ public class Dispersion implements Behavior {
 
 	@Override
 	public void action() {
-		RConsole.println(
-				"Ejecutando Dispersion: largo = " + Integer.toString(medidaLarga));
 		suppressed = false;
 		THBall.setSpeed(THBall.SPEED_DRIVE);
 		THBall.avanzar();

@@ -1,8 +1,5 @@
 package behaviors;
 
-import lejos.nxt.NXTRegulatedMotor;
-import lejos.nxt.TouchSensor;
-import lejos.nxt.addon.GyroDirectionFinder;
 import lejos.nxt.addon.OpticalDistanceSensor;
 import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
@@ -10,16 +7,9 @@ import main.THBall;
 
 public class Agregacion implements Behavior {
 
-	static GyroDirectionFinder gdf = THBall.gdf;
-	// static TouchSensor leftTouchSensor = THBall.leftTouchSensor;
-	static TouchSensor rightTouchSensor = THBall.rightTouchSensor;
-	static NXTRegulatedMotor leftMotor = THBall.leftMotor;
-	static NXTRegulatedMotor rightMotor = THBall.rightMotor;
 	static OpticalDistanceSensor largaDistancia = THBall.largaDistancia;
 	static OpticalDistanceSensor cortaDistancia = THBall.cortaDistancia;
 	static boolean suppressed = false;
-	// static NXTCam cam = THBall.cam;
-	int medidaLarga;// , medidaCorta;
 
 	@Override
 	public boolean takeControl() {
@@ -29,8 +19,9 @@ public class Agregacion implements Behavior {
 		// int medidaCorta = cortaDistancia.getDistance();
 		// RConsole.println("A - Larga - " + Integer.toString(medidaLarga));
 		// RConsole.println("A - Corta - " + Integer.toString(medidaCorta));
-		RConsole.println(
-				"Diferencia = " + Integer.toString(Math.abs(medidaCorta - medidaLarga)));
+		RConsole.println("Larga = " + Integer.toString(medidaLarga) + ", Corta = " + Integer.toString(medidaCorta));
+		RConsole.println("Diferencia = " + Integer.toString(Math.abs(medidaCorta - medidaLarga)));
+		RConsole.println("###########################################");
 		// return (((THBall.inRange(medidaLarga, 500.0f, 100.0f))
 		// && (THBall.inRange(medidaLarga, medidaCorta, 50.0f)))
 		// || ((THBall.inRange(medidaCorta, 500.0f, 100.0f))
