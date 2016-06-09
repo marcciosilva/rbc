@@ -3,6 +3,7 @@ package behaviors;
 import lejos.nxt.addon.OpticalDistanceSensor;
 import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
+import lejos.util.Delay;
 import main.THBall;
 
 public class Agregacion implements Behavior {
@@ -13,14 +14,16 @@ public class Agregacion implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		int medidaCorta = THBall.getSharpDistance(cortaDistancia);
-		int medidaLarga = THBall.getSharpDistance(largaDistancia);
-		// int medidaLarga = largaDistancia.getDistance();
-		// int medidaCorta = cortaDistancia.getDistance();
-		// RConsole.println("A - Larga - " + Integer.toString(medidaLarga));
-		// RConsole.println("A - Corta - " + Integer.toString(medidaCorta));
-		RConsole.println("Larga = " + Integer.toString(medidaLarga) + ", Corta = " + Integer.toString(medidaCorta));
-		RConsole.println("Diferencia = " + Integer.toString(Math.abs(medidaCorta - medidaLarga)));
+		Delay.msDelay(1000);
+		int medidaCorta = THBall.cortaDistanciaPromedio;
+		int medidaLarga = THBall.largaDistanciaPromedio;
+		RConsole.println("A - Larga - " + Integer.toString(medidaLarga));
+		RConsole.println("A - Corta - " + Integer.toString(medidaCorta));
+		// RConsole.println("Larga = " + Integer.toString(medidaLarga) +
+		// ", Corta = "
+		// + Integer.toString(medidaCorta));
+		RConsole.println("Diferencia = "
+				+ Integer.toString(Math.abs(medidaCorta - medidaLarga)));
 		RConsole.println("###########################################");
 		// return (((THBall.inRange(medidaLarga, 500.0f, 100.0f))
 		// && (THBall.inRange(medidaLarga, medidaCorta, 50.0f)))

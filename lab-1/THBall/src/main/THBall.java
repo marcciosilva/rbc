@@ -1,13 +1,9 @@
 package main;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.Enumeration;
 import java.util.Queue;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-import behaviors.Agregacion;
-import behaviors.Dispersion;
 import lejos.nxt.Button;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
@@ -24,6 +20,8 @@ import lejos.nxt.remote.RemoteNXT;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 import lejos.util.Delay;
+import behaviors.Agregacion;
+import behaviors.Dispersion;
 
 public class THBall {
 
@@ -46,12 +44,14 @@ public class THBall {
 	public static OpticalDistanceSensor largaDistancia;
 	// OpticalDistanceSensor(SensorPort.S1);
 	public static OpticalDistanceSensor cortaDistancia;
-	public static Queue<Integer> largaDistanciaQueue = new LinkedList<Integer>();
-	public static Queue<Integer> cortaDistanciaQueue = new LinkedList<Integer>();
+	public static Queue<Integer> largaDistanciaQueue = new Queue<Integer>();
+	public static Queue<Integer> cortaDistanciaQueue = new Queue<Integer>();
 	// promedios
-	public static final Lock lockLargaDistanciaPromedio = new ReentrantLock();
+	// public static final Lock lockLargaDistanciaPromedio = new
+	// ReentrantLock();
 	public static int largaDistanciaPromedio = 0;
-	public static final Lock lockCortaDistanciaPromedio = new ReentrantLock();
+	// public static final Lock lockCortaDistanciaPromedio = new
+	// ReentrantLock();
 	public static int cortaDistanciaPromedio = 0;
 	// OpticalDistanceSensor(SensorPort.S4);
 
@@ -103,9 +103,9 @@ public class THBall {
 		// pongo behaviors en orden de prioridad
 		// a mayor indice mayor prioridad
 		Behavior behaviors[] = { /*
-									 * avanzar, corregir, avoid, tirarNaranja,
-									 * tirarAzul, evitarDeadlock,
-									 */dispersion, agregacion };
+								 * avanzar, corregir, avoid, tirarNaranja,
+								 * tirarAzul, evitarDeadlock,
+								 */dispersion, agregacion };
 		// tirarNaranja
 		// };
 		// declaro arbitrator
@@ -132,82 +132,64 @@ public class THBall {
 	 * Inicializa sensores remotos y threads de polling a sensores de distancia
 	 */
 	public static void inicializar() {
-		// largaDistancia = null;
-		// cortaDistancia = null;
 		try {
 			remoteNxt = new RemoteNXT("rbc4_2", Bluetooth.getConnector());
 			largaDistancia = new OpticalDistanceSensor(remoteNxt.S1);
 			cortaDistancia = new OpticalDistanceSensor(remoteNxt.S2);
-			// cam = new NXTCam(remoteNxt.S2);
-			// cam = new NXTCam(SensorPort.S2);
-			// // cam.sendCommand('B'); // object tracking mode
-			// cam.sendCommand('A'); // sort by size
-			// cam.sendCommand('E'); // enable tracking
 			RConsole.openAny(10000);
-			// inicializo threads para promediar medidas de los sharps
-			(new Thread() {
-				float promedioLocal = 0.0f;
-				int cantMediciones = 10;
-
-				@Override
-				public void run() {
-					while (true) {
-						if (THBall.largaDistanciaQueue.size() == cantMediciones)
-							// saco un elemento
-							THBall.largaDistanciaQueue.poll();
-						// agrego una medida de uno de los sharps
-						THBall.largaDistanciaQueue.add(largaDistancia.getDistance());
-						// calculo nuevo promedio
-						promedioLocal = 0.0f;
-						for (int val : THBall.largaDistanciaQueue) {
-							promedioLocal += val;
-						}
-						promedioLocal /= THBall.largaDistanciaQueue.size();
-						try {
-							THBall.lockLargaDistanciaPromedio.lock();
-							THBall.largaDistanciaPromedio = (int) promedioLocal;
-						} finally {
-							THBall.lockLargaDistanciaPromedio.unlock();
-						}
-
-					}
-				}
-			}).start();
-
-			(new Thread() {
-				float promedioLocal = 0.0f;
-				int cantMediciones = 10;
-
-				@Override
-				public void run() {
-					while (true) {
-						if (THBall.cortaDistanciaQueue.size() == cantMediciones)
-							// saco un elemento
-							THBall.cortaDistanciaQueue.poll();
-						// agrego una medida de uno de los sharps
-						THBall.cortaDistanciaQueue.add(cortaDistancia.getDistance());
-						// calculo nuevo promedio
-						promedioLocal = 0.0f;
-						for (int val : THBall.cortaDistanciaQueue) {
-							promedioLocal += val;
-						}
-						promedioLocal /= THBall.cortaDistanciaQueue.size();
-						try {
-							THBall.lockCortaDistanciaPromedio.lock();
-							THBall.cortaDistanciaPromedio = (int) promedioLocal;
-						} finally {
-							THBall.lockCortaDistanciaPromedio.unlock();
-						}
-
-					}
-				}
-			}).start();
-
 		} catch (IOException e) {
 			LCD.clear();
 			LCD.drawString(e.getMessage(), 0, 0);
 			System.exit(1);
 		}
+		// inicializo threads para promediar medidas de los sharps
+		(new Thread() {
+			float promedioLocal = 0.0f;
+			int cantMediciones = 5;
+
+			@Override
+			public void run() {
+				while (true) {
+					if (THBall.largaDistanciaQueue.size() == cantMediciones)
+						// saco un elemento
+						THBall.largaDistanciaQueue.pop();
+					// agrego una medida de uno de los sharps
+					THBall.largaDistanciaQueue.push(largaDistancia.getDistance());
+					// calculo nuevo promedio
+					promedioLocal = 0.0f;
+					Enumeration<Integer> elements = THBall.largaDistanciaQueue.elements();
+					while (elements.hasMoreElements()) {
+						promedioLocal += elements.nextElement();
+					}
+					promedioLocal /= (float) THBall.largaDistanciaQueue.size();
+					THBall.largaDistanciaPromedio = (int) promedioLocal;
+				}
+			}
+		}).start();
+
+		(new Thread() {
+			float promedioLocal = 0.0f;
+			int cantMediciones = 5;
+
+			@Override
+			public void run() {
+				while (true) {
+					if (THBall.cortaDistanciaQueue.size() == cantMediciones)
+						// saco un elemento
+						THBall.cortaDistanciaQueue.pop();
+					// agrego una medida de uno de los sharps
+					THBall.cortaDistanciaQueue.push(cortaDistancia.getDistance());
+					// calculo nuevo promedio
+					promedioLocal = 0.0f;
+					Enumeration<Integer> elements = THBall.cortaDistanciaQueue.elements();
+					while (elements.hasMoreElements()) {
+						promedioLocal += elements.nextElement();
+					}
+					promedioLocal /= (float) THBall.cortaDistanciaQueue.size();
+					THBall.cortaDistanciaPromedio = (int) promedioLocal;
+				}
+			}
+		}).start();
 		gdf = new GyroDirectionFinder(gyro, true);
 		Delay.msDelay(5000);
 		// gdf.setDegreesCartesian(0.0f);
@@ -357,10 +339,12 @@ public class THBall {
 				stopMoving();
 				break;
 			}
-			if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
+			if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT)
+					&& (turnSide != TurnSide.RIGHT)) {
 				turnSide = TurnSide.RIGHT;
 				turnRight(SPEED_TURN);
-			} else if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT) && turnSide != TurnSide.LEFT) {
+			} else if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)
+					&& turnSide != TurnSide.LEFT) {
 				turnSide = TurnSide.LEFT;
 				turnLeft(SPEED_TURN);
 			}
@@ -386,7 +370,8 @@ public class THBall {
 	 */
 	public static boolean inRange(float valorActual, float valorEsperado, float error) {
 		// true if value is in range of reference
-		return ((valorActual <= valorEsperado + error) && (valorActual >= valorEsperado - error));
+		return ((valorActual <= valorEsperado + error) && (valorActual >= valorEsperado
+				- error));
 	}
 
 	/***
@@ -459,30 +444,6 @@ public class THBall {
 		setSpeed(SPEED_DRIVE);
 		leftMotor.backward();
 		rightMotor.backward();
-	}
-
-	/***
-	 * Devuelve un promedio de 10 mediciones del sensor pasado por parametro
-	 * 
-	 * @param sensor
-	 *            Sensor a partir del cual se obtiene medicion
-	 * @return Promedio
-	 */
-	public static int getSharpDistance(OpticalDistanceSensor sensor) {
-		// return sensor.getDistance();
-		int address = sensor.getAddress();
-		int returnVal = -1;
-		// capaz hay que meter algun try aca por si failea algun lock
-		if (address == largaDistancia.getAddress()) {
-			THBall.lockLargaDistanciaPromedio.lock();
-			returnVal = THBall.largaDistanciaPromedio;
-			THBall.lockLargaDistanciaPromedio.unlock();
-		} else if (address == cortaDistancia.getAddress()) {
-			THBall.lockCortaDistanciaPromedio.lock();
-			returnVal = THBall.cortaDistanciaPromedio;
-			THBall.lockCortaDistanciaPromedio.unlock();
-		}
-		return returnVal;
 	}
 
 }

@@ -1,19 +1,24 @@
-import java.util.LinkedList;
+import java.util.Enumeration;
 import java.util.Queue;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+
+import lejos.nxt.comm.RConsole;
 
 public class Test {
 
-	public static Queue<Integer> largaDistanciaQueue = new LinkedList<Integer>();
-	public static Queue<Integer> cortaDistanciaQueue = new LinkedList<Integer>();
+	public static Queue<Integer> largaDistanciaQueue = new Queue<Integer>();
+	public static Queue<Integer> cortaDistanciaQueue = new Queue<Integer>();
 	// promedios
-	public static final Lock lockLargaDistanciaPromedio = new ReentrantLock();
+	// public static final Lock lockLargaDistanciaPromedio = new
+	// ReentrantLock();
+	// public static final Object lockLargaDistanciaPromedio = new Object();
 	public static int largaDistanciaPromedio = 0;
-	public static final Lock lockCortaDistanciaPromedio = new ReentrantLock();
+	// public static final Lock lockCortaDistanciaPromedio = new
+	// ReentrantLock();
+	// public static final Object lockCortaDistanciaPromedio = new Object();
 	public static int cortaDistanciaPromedio = 0;
 
 	public static void main(String[] args) {
+		RConsole.openAny(10000);
 		(new Thread() {
 			float promedioLocal = 0.0f;
 			int cantMediciones = 10;
@@ -23,22 +28,18 @@ public class Test {
 				while (true) {
 					if (Test.largaDistanciaQueue.size() == cantMediciones)
 						// saco un elemento
-						Test.largaDistanciaQueue.poll();
+						Test.largaDistanciaQueue.pop();
+					Test.largaDistanciaQueue.push((int) (Math.random() * 100));
 					// agrego una medida imaginaria para reemplazar sensor
-					Test.largaDistanciaQueue.add((int) (Math.random() * 100));
-					// calculo nuevo promedio
 					promedioLocal = 0.0f;
-					for (int val : Test.largaDistanciaQueue) {
-						promedioLocal += val;
+					Enumeration<Integer> elements = Test.largaDistanciaQueue.elements();
+					while (elements.hasMoreElements()) {
+						promedioLocal += elements.nextElement();
 					}
 					promedioLocal /= Test.largaDistanciaQueue.size();
-					try {
-						Test.lockLargaDistanciaPromedio.lock();
-						Test.largaDistanciaPromedio = (int) promedioLocal;
-					} finally {
-						Test.lockLargaDistanciaPromedio.unlock();
-					}
-
+					// synchronized (Test.lockLargaDistanciaPromedio) {
+					Test.largaDistanciaPromedio = (int) promedioLocal;
+					// }
 				}
 			}
 		}).start();
@@ -52,34 +53,33 @@ public class Test {
 				while (true) {
 					if (Test.cortaDistanciaQueue.size() == cantMediciones)
 						// saco un elemento
-						Test.cortaDistanciaQueue.poll();
+						Test.cortaDistanciaQueue.pop();
 					// agrego una medida imaginaria para reemplazar sensor
-					Test.cortaDistanciaQueue.add((int) (Math.random() * 100));
-					// calculo nuevo promedio
+					Test.cortaDistanciaQueue.push((int) (Math.random() * 100));
+					// agrego una medida imaginaria para reemplazar sensor
 					promedioLocal = 0.0f;
-					for (int val : Test.cortaDistanciaQueue) {
-						promedioLocal += val;
+					Enumeration<Integer> elements = Test.cortaDistanciaQueue.elements();
+					while (elements.hasMoreElements()) {
+						promedioLocal += elements.nextElement();
 					}
 					promedioLocal /= Test.cortaDistanciaQueue.size();
-					try {
-						Test.lockCortaDistanciaPromedio.lock();
-						Test.cortaDistanciaPromedio = (int) promedioLocal;
-					} finally {
-						Test.lockCortaDistanciaPromedio.unlock();
-					}
-
+					// synchronized (Test.lockCortaDistanciaPromedio) {
+					Test.cortaDistanciaPromedio = (int) promedioLocal;
+					// }
 				}
 			}
 		}).start();
 
 		while (true) {
-			lockCortaDistanciaPromedio.lock();
-			System.out.println("Promedio corta distancia = " + Integer.toString(cortaDistanciaPromedio));
-			lockCortaDistanciaPromedio.unlock();
-			lockLargaDistanciaPromedio.lock();
-			System.out.println("Promedio larga distancia = " + Integer.toString(largaDistanciaPromedio));
-			lockLargaDistanciaPromedio.unlock();
-			System.out.println("##################################################");
+			// lockCortaDistanciaPromedio.lock();
+			RConsole.println("Promedio corta distancia = "
+					+ Integer.toString(cortaDistanciaPromedio));
+			// lockCortaDistanciaPromedio.unlock();
+			// lockLargaDistanciaPromedio.lock();
+			RConsole.println("Promedio larga distancia = "
+					+ Integer.toString(largaDistanciaPromedio));
+			// lockLargaDistanciaPromedio.unlock();
+			RConsole.println("##################################################");
 			// try {
 			// Thread.sleep(1000);
 			// } catch (InterruptedException e) {
@@ -88,5 +88,4 @@ public class Test {
 		}
 
 	}
-
 }
