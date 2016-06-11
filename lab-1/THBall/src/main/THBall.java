@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.util.EmptyQueueException;
 import java.util.Enumeration;
 import java.util.Queue;
 
@@ -102,10 +103,10 @@ public class THBall {
 		// Behavior evitarDeadlock = new EvitarDeadlock();
 		// pongo behaviors en orden de prioridad
 		// a mayor indice mayor prioridad
-		Behavior behaviors[] = { /*
-								 * avanzar, corregir, avoid, tirarNaranja,
-								 * tirarAzul, evitarDeadlock,
-								 */dispersion, agregacion };
+		// Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja,
+		// tirarAzul,
+		// evitarDeadlock, dispersion, agregacion };
+		Behavior behaviors[] = { agregacion, dispersion };
 		// tirarNaranja
 		// };
 		// declaro arbitrator
@@ -134,8 +135,8 @@ public class THBall {
 	public static void inicializar() {
 		try {
 			remoteNxt = new RemoteNXT("rbc4_2", Bluetooth.getConnector());
-			largaDistancia = new OpticalDistanceSensor(remoteNxt.S1);
-			cortaDistancia = new OpticalDistanceSensor(remoteNxt.S2);
+			largaDistancia = new OpticalDistanceSensor(remoteNxt.S2);
+			cortaDistancia = new OpticalDistanceSensor(remoteNxt.S1);
 			RConsole.openAny(10000);
 		} catch (IOException e) {
 			LCD.clear();
@@ -150,19 +151,24 @@ public class THBall {
 			@Override
 			public void run() {
 				while (true) {
-					if (THBall.largaDistanciaQueue.size() == cantMediciones)
-						// saco un elemento
-						THBall.largaDistanciaQueue.pop();
-					// agrego una medida de uno de los sharps
-					THBall.largaDistanciaQueue.push(largaDistancia.getDistance());
-					// calculo nuevo promedio
-					promedioLocal = 0.0f;
-					Enumeration<Integer> elements = THBall.largaDistanciaQueue.elements();
-					while (elements.hasMoreElements()) {
-						promedioLocal += elements.nextElement();
+					try {
+						if (THBall.largaDistanciaQueue.size() == cantMediciones)
+							// saco un elemento
+							THBall.largaDistanciaQueue.pop();
+						// agrego una medida de uno de los sharps
+						THBall.largaDistanciaQueue.push(largaDistancia.getDistance());
+						// calculo nuevo promedio
+						promedioLocal = 0.0f;
+						Enumeration<Integer> elements = THBall.largaDistanciaQueue
+								.elements();
+						while (elements.hasMoreElements()) {
+							promedioLocal += elements.nextElement();
+						}
+						promedioLocal /= (float) THBall.largaDistanciaQueue.size();
+						THBall.largaDistanciaPromedio = (int) promedioLocal;
+					} catch (EmptyQueueException e) {
+						RConsole.println(e.getMessage());
 					}
-					promedioLocal /= (float) THBall.largaDistanciaQueue.size();
-					THBall.largaDistanciaPromedio = (int) promedioLocal;
 				}
 			}
 		}).start();
@@ -174,19 +180,24 @@ public class THBall {
 			@Override
 			public void run() {
 				while (true) {
-					if (THBall.cortaDistanciaQueue.size() == cantMediciones)
-						// saco un elemento
-						THBall.cortaDistanciaQueue.pop();
-					// agrego una medida de uno de los sharps
-					THBall.cortaDistanciaQueue.push(cortaDistancia.getDistance());
-					// calculo nuevo promedio
-					promedioLocal = 0.0f;
-					Enumeration<Integer> elements = THBall.cortaDistanciaQueue.elements();
-					while (elements.hasMoreElements()) {
-						promedioLocal += elements.nextElement();
+					try {
+						if (THBall.cortaDistanciaQueue.size() == cantMediciones)
+							// saco un elemento
+							THBall.cortaDistanciaQueue.pop();
+						// agrego una medida de uno de los sharps
+						THBall.cortaDistanciaQueue.push(cortaDistancia.getDistance());
+						// calculo nuevo promedio
+						promedioLocal = 0.0f;
+						Enumeration<Integer> elements = THBall.cortaDistanciaQueue
+								.elements();
+						while (elements.hasMoreElements()) {
+							promedioLocal += elements.nextElement();
+						}
+						promedioLocal /= (float) THBall.cortaDistanciaQueue.size();
+						THBall.cortaDistanciaPromedio = (int) promedioLocal;
+					} catch (EmptyQueueException e) {
+						RConsole.println(e.getMessage());
 					}
-					promedioLocal /= (float) THBall.cortaDistanciaQueue.size();
-					THBall.cortaDistanciaPromedio = (int) promedioLocal;
 				}
 			}
 		}).start();

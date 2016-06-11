@@ -1,7 +1,9 @@
 package behaviors;
 
 import lejos.nxt.addon.OpticalDistanceSensor;
+import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
+import lejos.util.Delay;
 import main.THBall;
 
 public class Dispersion implements Behavior {
@@ -12,6 +14,22 @@ public class Dispersion implements Behavior {
 
 	@Override
 	public boolean takeControl() {
+		Delay.msDelay(1000);
+		int medidaCorta = THBall.cortaDistanciaPromedio;
+		int medidaLarga = THBall.largaDistanciaPromedio;
+		int diferencia = Math.abs(medidaCorta - medidaLarga);
+		RConsole.println("Corta = " + Integer.toString(medidaCorta));
+		if ((diferencia >= 300 && diferencia <= 800) // si es un robot
+				&& medidaCorta <= 150) {
+			RConsole.println("Larga = " + Integer.toString(medidaLarga));
+			RConsole.println("Diferencia = " + Integer.toString(diferencia));
+			RConsole.println("Dispersion");
+			RConsole.println("###########################################");
+			return true;
+		}
+		RConsole.println("###########################################");
+		return false;
+
 		// int numObj = cam.getNumberOfObjects();
 		// if (numObj > 0) {
 		// java.awt.Rectangle rect = cam.getRectangle(0);
@@ -19,7 +37,6 @@ public class Dispersion implements Behavior {
 		// 30.0f));
 		// // && (THBall.getSharpDistance(largaDistancia) <= 350.0f);
 		// } else
-		return false;
 		// medidaLarga = THBall.getSharpDistance(largaDistancia);
 		// medidaCorta = THBall.getSharpDistance(cortaDistancia);
 		// int medidaLarga = largaDistancia.getDistance();
@@ -43,22 +60,22 @@ public class Dispersion implements Behavior {
 
 	@Override
 	public void action() {
-		suppressed = false;
-		THBall.setSpeed(THBall.SPEED_DRIVE);
-		THBall.avanzar();
-		while (!suppressed) {
-			Thread.yield();
-		}
-		// int numObj;
-		// java.awt.Rectangle rect = null;
-		// do {
-		// numObj = cam.getNumberOfObjects();
-		// if (numObj > 0) {
-		// rect = cam.getRectangle(0);
+		// suppressed = false;
+		// THBall.setSpeed(THBall.SPEED_DRIVE);
+		// THBall.avanzar();
+		// while (!suppressed) {
+		// Thread.yield();
 		// }
-		// } while (!suppressed && rect != null
-		// && (THBall.inRange(rect.x + rect.width / 2.0f, 176 / 2.0f, 30.0f)
-		// && (THBall.getSharpDistance(largaDistancia) <= 350.0f)));
+		// // int numObj;
+		// // java.awt.Rectangle rect = null;
+		// // do {
+		// // numObj = cam.getNumberOfObjects();
+		// // if (numObj > 0) {
+		// // rect = cam.getRectangle(0);
+		// // }
+		// // } while (!suppressed && rect != null
+		// // && (THBall.inRange(rect.x + rect.width / 2.0f, 176 / 2.0f, 30.0f)
+		// // && (THBall.getSharpDistance(largaDistancia) <= 350.0f)));
 	}
 
 	@Override

@@ -17,14 +17,35 @@ public class Agregacion implements Behavior {
 		Delay.msDelay(1000);
 		int medidaCorta = THBall.cortaDistanciaPromedio;
 		int medidaLarga = THBall.largaDistanciaPromedio;
-		RConsole.println("A - Larga - " + Integer.toString(medidaLarga));
-		RConsole.println("A - Corta - " + Integer.toString(medidaCorta));
+		int diferencia = Math.abs(medidaCorta - medidaLarga);
+		RConsole.println("Corta = " + Integer.toString(medidaCorta));
+		if ((diferencia >= 300 && diferencia <= 800) // si es un robot
+				&& medidaCorta >= 350 && medidaCorta <= 500) {
+			RConsole.println("Larga = " + Integer.toString(medidaLarga));
+			RConsole.println("Diferencia = " + Integer.toString(diferencia));
+			RConsole.println("Agregacion");
+			RConsole.println("###########################################");
+			return true;
+		}
+		RConsole.println("###########################################");
+		// RConsole.println("Larga = " + Integer.toString(medidaLarga));
+		// RConsole.println("Corta = " + Integer.toString(medidaCorta));
+		// RConsole.println("Diferencia = " + Integer.toString(diferencia));
+		// if (diferencia <= 250)
+		// RConsole.println("PARED");
+		// else if (diferencia >= 300 && diferencia <= 800)
+		// RConsole.println("ROBOT");
+		// else
+		// RConsole.println("UNKNOWN");
+
+		// RConsole.println("A - Larga - " + Integer.toString(medidaLarga));
+		// RConsole.println("A - Corta - " + Integer.toString(medidaCorta));
 		// RConsole.println("Larga = " + Integer.toString(medidaLarga) +
 		// ", Corta = "
 		// + Integer.toString(medidaCorta));
-		RConsole.println("Diferencia = "
-				+ Integer.toString(Math.abs(medidaCorta - medidaLarga)));
-		RConsole.println("###########################################");
+		// RConsole.println("Diferencia = "
+		// + Integer.toString(Math.abs(medidaCorta - medidaLarga)));
+		// RConsole.println("###########################################");
 		// return (((THBall.inRange(medidaLarga, 500.0f, 100.0f))
 		// && (THBall.inRange(medidaLarga, medidaCorta, 50.0f)))
 		// || ((THBall.inRange(medidaCorta, 500.0f, 100.0f))
@@ -51,29 +72,29 @@ public class Agregacion implements Behavior {
 
 	@Override
 	public void action() {
-		RConsole.println("Ejecutando Agregacion");// : largo = " +
-													// Integer.toString(medidaLarga));
-		// + ", corto = " + Integer.toString(medidaCorta));
-		suppressed = false;
-		THBall.atrasar();
-		while (!suppressed) {
-			Thread.yield();
-		}
-
-		// while (!suppressed && cortaDistancia.getDistance() > 400.0f) {
+		// RConsole.println("Ejecutando Agregacion");// : largo = " +
+		// // Integer.toString(medidaLarga));
+		// // + ", corto = " + Integer.toString(medidaCorta));
+		// suppressed = false;
+		// THBall.atrasar();
+		// while (!suppressed) {
 		// Thread.yield();
 		// }
-
-		// int numObj;
-		// java.awt.Rectangle rect = null;
-		// do {
-		// numObj = cam.getNumberOfObjects();
-		// if (numObj > 0) {
-		// rect = cam.getRectangle(0);
-		// }
-		// } while (!suppressed && rect != null
-		// && (THBall.inRange(rect.x + rect.width / 2.0f, 176 / 2.0f, 30.0f)
-		// && (THBall.getSharpDistance(largaDistancia) > 400.0f)));
+		//
+		// // while (!suppressed && cortaDistancia.getDistance() > 400.0f) {
+		// // Thread.yield();
+		// // }
+		//
+		// // int numObj;
+		// // java.awt.Rectangle rect = null;
+		// // do {
+		// // numObj = cam.getNumberOfObjects();
+		// // if (numObj > 0) {
+		// // rect = cam.getRectangle(0);
+		// // }
+		// // } while (!suppressed && rect != null
+		// // && (THBall.inRange(rect.x + rect.width / 2.0f, 176 / 2.0f, 30.0f)
+		// // && (THBall.getSharpDistance(largaDistancia) > 400.0f)));
 
 	}
 
