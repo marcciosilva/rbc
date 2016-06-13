@@ -1,4 +1,4 @@
-###########################################################PRUEBA###########################################################
+###########################################################PRUEBA1###########################################################
 Prueba contra caja, robot perpendicular a pared - 10/6
 
 El robot avanza y va registrando medidas de ambos sensores sharp (larga distancia), y muestra la diferencia entre ambos
@@ -42,7 +42,7 @@ A - Corta - 813
 Diferencia = 232
 ###########################################
 
-###########################################################PRUEBA###########################################################
+###########################################################PRUEBA2###########################################################
 
 Prueba contra caja, robot perpendicular a pared - 10/6
 
@@ -214,7 +214,9 @@ A - Corta - 684
 Diferencia = 100
 ###########################################
 
-PRUEBA enfrentando pared sin promediar, con los sharps de larga
+###########################################################PRUEBA3###########################################################
+
+Enfrentando pared sin promediar, con los sharps de larga
 
 Console open
 A - Larga - 453
@@ -630,7 +632,9 @@ A - Corta - 913
 Diferencia = 393
 ###########################################
 
-PRUEBA salidas al enfrentar robot (sin promediar medidas) dos de larga hombre guz
+###########################################################PRUEBA4###########################################################
+
+Salidas al enfrentar robot (sin promediar medidas) dos de larga hombre guz
 
 Diferencia = 250
 ###########################################
@@ -675,8 +679,8 @@ A - Corta - 939
 Diferencia = 339
 ###########################################
 
-PRUEBA
 
+###########################################################PRUEBA5###########################################################
 pared con promedio uno de media y uno de larga
 
 Diferencia = 250
@@ -722,7 +726,8 @@ A - Corta - 939
 Diferencia = 339
 ###########################################
 
- prueba hombre guz promediando con 5, sharp de mmedia y larga
+###########################################################PRUEBA6###########################################################
+Prueba hombre guz promediando con 5, sharp de mmedia y larga
 
  Console open
 A - Larga - 800
@@ -890,8 +895,8 @@ A - Corta - 1085
 Diferencia = 549
 ###########################################
 
-
-PRUEBA robot gonzalo con un sharp medio y otro sharp largo puto
+###########################################################PRUEBA7###########################################################
+PRUEBA robot gonzalo con un sharp medio y otro sharp largo
 
 
 Console open
@@ -1008,9 +1013,11 @@ A - Corta - 912
 Diferencia = 90
 ###########################################
 
+
 A partir de acá se asume que debajo de 250 de diferencia se está en presencia de una pared
 Entre 300 y 500 se está en presencia de un robot
 
+###########################################################PRUEBA8###########################################################
 PRUEBA - se imprime robot, pared o unkown, y la diferencia, para intentar identificar bla
 
 Console open
@@ -1195,6 +1202,8 @@ Diferencia = 401
 ROBOT
 ###########################################
 
+
+###########################################################PRUEBA9###########################################################
 PRUEBA ajustando el rango a 800 para incorporar robots
 
 
@@ -1383,7 +1392,8 @@ Diferencia = 320
 ROBOT
 ###########################################
 
-PRUEBA contra zona muerta con el robot de hombre guz justo del otro lado (tira pared en su mayoria)
+###########################################################PRUEBA10###########################################################
+Contra zona muerta con el robot de hombre guz justo del otro lado (tira pared en su mayoria)
 
 ###########################################
 Larga = 480
@@ -1427,7 +1437,8 @@ Diferencia = 244
 PARED
 ###########################################
 
-PRUEBA contra zona muerta sin ningun robot (vacio)
+###########################################################PRUEBA11###########################################################
+Contra zona muerta sin ningun robot (vacio)
 El de larga distancia es de mas de 800 y ta
 
 ###########################################
