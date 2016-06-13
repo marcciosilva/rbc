@@ -1,7 +1,6 @@
 package main;
 
 import java.io.IOException;
-import java.util.EmptyQueueException;
 import java.util.Enumeration;
 import java.util.Queue;
 
@@ -74,7 +73,6 @@ public class THBall {
 		setupBehaviors();
 		boolean exitMenu = false;
 		LCD.clear();
-		LCD.drawString("Presione algun boton", 0, 0);
 		int buttonPressed = 0;
 		while (!exitMenu) {
 			buttonPressed = Button.readButtons();
@@ -166,8 +164,8 @@ public class THBall {
 						}
 						promedioLocal /= (float) THBall.largaDistanciaQueue.size();
 						THBall.largaDistanciaPromedio = (int) promedioLocal;
-					} catch (EmptyQueueException e) {
-						RConsole.println(e.getMessage());
+					} catch (Exception e) {
+						RConsole.println(e.toString());
 					}
 				}
 			}
@@ -195,8 +193,8 @@ public class THBall {
 						}
 						promedioLocal /= (float) THBall.cortaDistanciaQueue.size();
 						THBall.cortaDistanciaPromedio = (int) promedioLocal;
-					} catch (EmptyQueueException e) {
-						RConsole.println(e.getMessage());
+					} catch (Exception e) {
+						RConsole.println(e.toString());
 					}
 				}
 			}

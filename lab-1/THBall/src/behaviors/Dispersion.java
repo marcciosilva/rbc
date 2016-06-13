@@ -20,7 +20,7 @@ public class Dispersion implements Behavior {
 		int diferencia = Math.abs(medidaCorta - medidaLarga);
 		RConsole.println("Corta = " + Integer.toString(medidaCorta));
 		if ((diferencia >= 300 && diferencia <= 800) // si es un robot
-				&& medidaCorta <= 150) {
+				&& medidaCorta <= 300) {
 			RConsole.println("Larga = " + Integer.toString(medidaLarga));
 			RConsole.println("Diferencia = " + Integer.toString(diferencia));
 			RConsole.println("Dispersion");
