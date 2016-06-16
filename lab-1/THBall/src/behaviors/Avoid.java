@@ -4,7 +4,6 @@ import lejos.nxt.TouchSensor;
 import lejos.nxt.addon.GyroDirectionFinder;
 import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
-import lejos.util.Delay;
 import main.THBall;
 import main.THBall.TurnSide;
 
@@ -25,8 +24,8 @@ public class Avoid implements Behavior {
 		RConsole.println("Ejecutando Avoid");
 		THBall.timer = System.currentTimeMillis();
 		suppressed = false;
-		THBall.avanzar();
-		Delay.msDelay(1000);
+		// THBall.avanzar();
+		// Delay.msDelay(1000);
 		THBall.stopMoving();
 		THBall.resetGyro();
 		// retrocede hasta estar a por lo menos 20 cm
@@ -57,11 +56,13 @@ public class Avoid implements Behavior {
 			// Delay.msDelay(1);
 			// THBall.timer++;
 			anguloActual = THBall.modAngulo(gdf.getDegrees());
-			if (THBall.inRangeAngle(anguloActual, anguloObjetivo, THBall.ERROR_PERMITIDO_ANGULO)) {
+			if (THBall.inRangeAngle(anguloActual, anguloObjetivo,
+					THBall.ERROR_PERMITIDO_ANGULO)) {
 				THBall.stopMoving();
 				break;
 			}
-			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
+			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT)
+					&& (turnSide != TurnSide.RIGHT)) {
 				turnSide = TurnSide.RIGHT;
 				THBall.turnRight(THBall.SPEED_TURN);
 			} else if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)

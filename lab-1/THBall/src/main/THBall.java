@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import java.util.Queue;
 
 import lejos.nxt.Button;
+import lejos.nxt.ButtonListener;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
@@ -13,17 +14,27 @@ import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.addon.GyroDirectionFinder;
 import lejos.nxt.addon.GyroSensor;
+import lejos.nxt.addon.LnrActrFirgelliNXT;
 import lejos.nxt.addon.OpticalDistanceSensor;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.RConsole;
 import lejos.nxt.remote.RemoteNXT;
+import lejos.robotics.EncoderMotor;
+import lejos.robotics.LinearActuator;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 import lejos.util.Delay;
 import behaviors.Agregacion;
+import behaviors.Avanzar;
+import behaviors.Avoid;
+import behaviors.Corregir;
 import behaviors.Dispersion;
+import behaviors.EvitarDeadlock;
+import behaviors.SensorManager;
 
 public class THBall {
+	// Sensor Manager
+	public static SensorManager SM;
 
 	// public static NXTCam cam;
 	public static long timer;
@@ -36,6 +47,7 @@ public class THBall {
 	final static int CATAPULTA_MOVER = (int) (CATAPULTA_TIRAR / 10.0f);
 	public final static float ERROR_PERMITIDO_ANGULO = 10.0f;
 	// actuadores
+	public static LinearActuator lnrAct;
 	public static NXTRegulatedMotor leftMotor = Motor.A;
 	public static NXTRegulatedMotor rightMotor = Motor.C;
 	public static NXTRegulatedMotor catapulta = Motor.B;
@@ -90,21 +102,23 @@ public class THBall {
 	 * Inicializa comportamientos y arbitrator
 	 */
 	private static void setupBehaviors() {
-		// Behavior avanzar = new Avanzar();
-		// Behavior avoid = new Avoid();
-		// Behavior corregir = new Corregir();
+		Behavior avanzar = new Avanzar();
+		Behavior avoid = new Avoid();
+		Behavior corregir = new Corregir();
 		// Behavior tirarAzul = new TirarAzul();
 		// // Behavior tengoNaranja = new TengoNaranja();
 		// Behavior tirarNaranja = new TirarNaranja();
 		Behavior dispersion = new Dispersion();
 		Behavior agregacion = new Agregacion();
-		// Behavior evitarDeadlock = new EvitarDeadlock();
+		Behavior evitarDeadlock = new EvitarDeadlock();
 		// pongo behaviors en orden de prioridad
 		// a mayor indice mayor prioridad
 		// Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja,
 		// tirarAzul,
 		// evitarDeadlock, dispersion, agregacion };
-		Behavior behaviors[] = { agregacion, dispersion };
+		// Behavior behaviors[] = { agregacion, dispersion };
+		Behavior behaviors[] = { avanzar, corregir, avoid, dispersion, agregacion,
+				evitarDeadlock };
 		// tirarNaranja
 		// };
 		// declaro arbitrator
@@ -135,7 +149,11 @@ public class THBall {
 			remoteNxt = new RemoteNXT("rbc4_2", Bluetooth.getConnector());
 			largaDistancia = new OpticalDistanceSensor(remoteNxt.S2);
 			cortaDistancia = new OpticalDistanceSensor(remoteNxt.S1);
+			// inicializacion de actuador lineal
+			lnrAct = new LnrActrFirgelliNXT((EncoderMotor) remoteNxt.B);
+			lnrAct.moveTo(200, false);
 			RConsole.openAny(10000);
+			SM = new SensorManager();
 		} catch (IOException e) {
 			LCD.clear();
 			LCD.drawString(e.getMessage(), 0, 0);
@@ -144,7 +162,7 @@ public class THBall {
 		// inicializo threads para promediar medidas de los sharps
 		(new Thread() {
 			float promedioLocal = 0.0f;
-			int cantMediciones = 5;
+			int cantMediciones = 1;
 
 			@Override
 			public void run() {
@@ -173,7 +191,7 @@ public class THBall {
 
 		(new Thread() {
 			float promedioLocal = 0.0f;
-			int cantMediciones = 5;
+			int cantMediciones = 1;
 
 			@Override
 			public void run() {
@@ -205,6 +223,24 @@ public class THBall {
 		gdf.setDegrees(0.0f);
 		catapulta.resetTachoCount();
 		bajarCatapulta();
+
+		Button.ESCAPE.addButtonListener(new ButtonListener() {
+			@Override
+			public void buttonReleased(Button b) {
+			}
+
+			@Override
+			public void buttonPressed(Button b) {
+				try {
+					arbitrator.wait(20000);
+				} catch (InterruptedException e) {
+					RConsole.println(e.getClass().toString());
+				}
+				lnrAct.stop();
+				lnrAct.moveTo(-200, true);
+				System.exit(0);
+			}
+		});
 	}
 
 	/**

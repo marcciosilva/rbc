@@ -3,7 +3,6 @@ package behaviors;
 import lejos.nxt.addon.OpticalDistanceSensor;
 import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
-import lejos.util.Delay;
 import main.THBall;
 
 public class Agregacion implements Behavior {
@@ -14,20 +13,16 @@ public class Agregacion implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		Delay.msDelay(1000);
+		// Delay.msDelay(1000);
 		int medidaCorta = THBall.cortaDistanciaPromedio;
 		int medidaLarga = THBall.largaDistanciaPromedio;
 		int diferencia = Math.abs(medidaCorta - medidaLarga);
-		RConsole.println("Corta = " + Integer.toString(medidaCorta));
-		if ((diferencia >= 300 && diferencia <= 800) // si es un robot
-				&& medidaCorta >= 350 && medidaCorta <= 500) {
-			RConsole.println("Larga = " + Integer.toString(medidaLarga));
-			RConsole.println("Diferencia = " + Integer.toString(diferencia));
-			RConsole.println("Agregacion");
-			RConsole.println("###########################################");
-			return true;
-		}
-		RConsole.println("###########################################");
+		// RConsole.println("Corta = " + Integer.toString(medidaCorta));
+		// RConsole.println("Larga = " + Integer.toString(medidaLarga));
+		// RConsole.println("Diferencia = " + Integer.toString(diferencia));
+		return ((diferencia >= 300 && diferencia <= 800) // si es un robot
+				&& medidaCorta > 250 && medidaCorta <= 500);
+		// RConsole.println("###########################################");
 		// RConsole.println("Larga = " + Integer.toString(medidaLarga));
 		// RConsole.println("Corta = " + Integer.toString(medidaCorta));
 		// RConsole.println("Diferencia = " + Integer.toString(diferencia));
@@ -67,11 +62,12 @@ public class Agregacion implements Behavior {
 		// && (medidaLarga >= 500.0f && medidaLarga <= 800.0f);
 		// } else
 		// return false;
-		return false;
 	}
 
 	@Override
 	public void action() {
+		RConsole.println("Agregacion");
+		THBall.avanzar();
 		// RConsole.println("Ejecutando Agregacion");// : largo = " +
 		// // Integer.toString(medidaLarga));
 		// // + ", corto = " + Integer.toString(medidaCorta));
