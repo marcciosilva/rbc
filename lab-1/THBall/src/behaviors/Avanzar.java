@@ -3,10 +3,10 @@ package behaviors;
 import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
+import utils.Movilidad;
+import utils.Suppressable;
 
-public class Avanzar implements Behavior {
-
-	boolean suppressed = false;
+public class Avanzar extends Suppressable implements Behavior {
 
 	public boolean takeControl() {
 		return true;
@@ -14,17 +14,17 @@ public class Avanzar implements Behavior {
 
 	public void action() {
 		RConsole.println("Ejecutando Avanzar");
-		suppressed = false;
+		setSuppressed(false);
 		THBall.timer = System.currentTimeMillis();
-		THBall.avanzar();
-		while (!suppressed) {
+		Movilidad.avanzar();
+		while (!getSuppressed()) {
 			Thread.yield();
 		}
 	}
 
 	public void suppress() {
-		suppressed = true;
-		THBall.stopMoving();
+		setSuppressed(true);
+		Movilidad.stopMoving();
 	}
 
 }

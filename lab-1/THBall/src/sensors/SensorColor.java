@@ -1,4 +1,4 @@
-package utils;
+package sensors;
 
 import lejos.nxt.ColorSensor;
 import lejos.nxt.ColorSensor.Color;

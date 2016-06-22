@@ -3,20 +3,22 @@ package behaviors;
 import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
 import lejos.util.Delay;
-import main.THBall;
-import utils.SensorSharp;
+import sensors.SensorSharp;
+import utils.Movilidad;
+import utils.Suppressable;
+import utils.Utils;
 
-public class Agregacion implements Behavior {
+public class Agregacion extends Suppressable implements Behavior {
 
 	SensorSharp sensorLargaDistancia;
 	SensorSharp sensorMediaDistancia;
 	SensorSharp sensorMediaDistanciaMuerta;
-	static boolean suppressed = false;
 
 	public Agregacion(SensorSharp sld, SensorSharp smd, SensorSharp smdm) {
 		sensorLargaDistancia = sld;
 		sensorMediaDistancia = smd;
 		sensorMediaDistanciaMuerta = smdm;
+		setSuppressed(false);
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class Agregacion implements Behavior {
 		RConsole.println("Corta = " + Integer.toString(medidaCorta));
 		RConsole.println("Larga = " + Integer.toString(medidaLarga));
 		RConsole.println("Diferencia = " + Integer.toString(diferencia));
-		if (medidaCorta > 600 && THBall.hayRobot(diferencia)) {
+		if (medidaCorta > 600 && Utils.hayRobot(diferencia)) {
 			RConsole.println("Agregacion");
 		}
 		return false;
@@ -37,13 +39,13 @@ public class Agregacion implements Behavior {
 	@Override
 	public void action() {
 		RConsole.println("Agregacion");
-		THBall.avanzar();
+		Movilidad.avanzar();
 	}
 
 	@Override
 	public void suppress() {
-		suppressed = true;
-		THBall.stopMoving();
+		setSuppressed(true);
+		Movilidad.stopMoving();
 
 	}
 

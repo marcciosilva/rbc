@@ -1,4 +1,4 @@
-package utils;
+package sensors;
 
 import lejos.nxt.I2CPort;
 import lejos.nxt.addon.OpticalDistanceSensor;

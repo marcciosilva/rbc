@@ -3,7 +3,7 @@ package behaviors;
 import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
 import lejos.util.Delay;
-import utils.SensorSharp;
+import sensors.SensorSharp;
 
 public class DistanceTest implements Behavior {
 
