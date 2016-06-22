@@ -6,26 +6,32 @@ import lejos.nxt.addon.GyroDirectionFinder;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
 import main.THBall.TurnSide;
+import utils.SensorColor;
 
 public class TirarAzul implements Behavior {
 
 	static GyroDirectionFinder gdf = THBall.gdf;
 	static boolean suppressed = false;
-	static ColorSensor colorSensor = THBall.colorSensor;
+	SensorColor colorSensor;
 	static NXTRegulatedMotor catapulta = THBall.catapulta;
 	static NXTRegulatedMotor leftMotor = THBall.leftMotor;
 	static NXTRegulatedMotor rightMotor = THBall.rightMotor;
 	static int error = 5;
 
+	public TirarAzul(SensorColor cs) {
+		colorSensor = cs;
+	}
+
 	public static boolean inRange(int min, int max, int value) {
 		// true if value is in range of reference
-		return ((value > min + error || value > min - error) && (value < max + error || value < max - error));
+		return ((value > min + error || value > min - error) && (value < max + error || value < max
+				- error));
 	}
 
 	@Override
 	public boolean takeControl() {
 		suppressed = false;
-		ColorSensor.Color color = colorSensor.getColor();
+		ColorSensor.Color color = colorSensor.getMeasurement(true);
 		int r = color.getRed();
 		int g = color.getGreen();
 		int b = color.getBlue();
@@ -59,11 +65,13 @@ public class TirarAzul implements Behavior {
 		}
 		while (!suppressed) {
 			anguloActual = THBall.modAngulo(gdf.getDegrees());
-			if (THBall.inRangeAngle(anguloActual, anguloObjetivo, THBall.ERROR_PERMITIDO_ANGULO)) {
+			if (THBall.inRangeAngle(anguloActual, anguloObjetivo,
+					THBall.ERROR_PERMITIDO_ANGULO)) {
 				THBall.stopMoving();
 				break;
 			}
-			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
+			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT)
+					&& (turnSide != TurnSide.RIGHT)) {
 				turnSide = TurnSide.RIGHT;
 				THBall.turnRight(THBall.SPEED_TURN);
 			} else if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)

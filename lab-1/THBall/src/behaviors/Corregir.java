@@ -23,16 +23,21 @@ public class Corregir implements Behavior {
 
 	@Override
 	public void action() {
-		RConsole.println("Ejecutando Corregir");
-		THBall.timer = System.currentTimeMillis();
-		if (leftTouchSensor.isPressed() && !rightTouchSensor.isPressed()) {
-			// desviado a la derecha
-			THBall.turnLeft(THBall.SPEED_CORRECT);
-			leftMotor.backward();
-			// leftMotor.stop();
-			rightMotor.forward();
-		} else if (!leftTouchSensor.isPressed() && rightTouchSensor.isPressed()) {
-			THBall.turnRight(THBall.SPEED_CORRECT);
+		try {
+			RConsole.println("Ejecutando Corregir");
+			THBall.timer = System.currentTimeMillis();
+			if (leftTouchSensor.isPressed() && !rightTouchSensor.isPressed()) {
+				// desviado a la derecha
+				THBall.turnLeft(THBall.SPEED_CORRECT);
+				leftMotor.backward();
+				// leftMotor.stop();
+				rightMotor.forward();
+			} else if (!leftTouchSensor.isPressed() && rightTouchSensor.isPressed()) {
+				THBall.turnRight(THBall.SPEED_CORRECT);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

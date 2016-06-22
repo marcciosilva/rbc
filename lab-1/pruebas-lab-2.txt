@@ -1551,4 +1551,329 @@ ROBOT
 
 
 
-PRUEBA 
+15-6-2015
+
+
+
+
+
+
+###############################################PRUEBA####################################################
+
+Recorrida autónoma en cancha vacía, para ver si el tipo reconoce o no falsos positivos
+
+Console open
+Corta = 1085
+Larga = 1166
+Diferencia = 81
+###########################################
+Ejecutando Avanzar
+Corta = 1014
+Larga = 1103
+Diferencia = 89
+###########################################
+Corta = 895
+Larga = 1011
+Diferencia = 116
+###########################################
+Corta = 822
+Larga = 431
+Diferencia = 391
+###########################################
+Corta = 606
+Larga = 667
+Diferencia = 61
+###########################################
+Corta = 500
+Larga = 558
+Diferencia = 58
+###########################################
+Corta = 430
+Larga = 352
+Diferencia = 78
+###########################################
+Corta = 402
+Larga = 307
+Diferencia = 95
+###########################################
+Corta = 325
+Larga = 155
+Diferencia = 170
+###########################################
+Ejecutando Corregir
+Corta = 265
+Larga = 233
+Diferencia = 32
+###########################################
+Ejecutando Corregir
+Corta = 204
+Larga = 172
+Diferencia = 32
+###########################################
+Ejecutando Avanzar
+Corta = 201
+Larga = 182
+Diferencia = 19
+###########################################
+Ejecutando Corregir
+Corta = 187
+Larga = 187
+Diferencia = 0
+###########################################
+Ejecutando Corregir
+Corta = 165
+Larga = 192
+Diferencia = 27
+###########################################
+Ejecutando Corregir
+Corta = 147
+Larga = 177
+Diferencia = 30
+###########################################
+Ejecutando Avanzar
+Corta = 139
+Larga = 174
+Diferencia = 35
+###########################################
+Ejecutando Corregir
+Corta = 113
+Larga = 171
+Diferencia = 58
+###########################################
+Ejecutando Avanzar
+Corta = 109
+Larga = 175
+Diferencia = 66
+###########################################
+Corta = 123
+Larga = 176
+Diferencia = 53
+###########################################
+Corta = 140
+Larga = 176
+Diferencia = 36
+###########################################
+Corta = 140
+Larga = 174
+Diferencia = 34
+###########################################
+Ejecutando Corregir
+Corta = 140
+Larga = 176
+Diferencia = 36
+###########################################
+Ejecutando Avanzar
+Corta = 108
+Larga = 126
+Diferencia = 18
+###########################################
+Ejecutando Corregir
+Corta = 127
+Larga = 161
+Diferencia = 34
+###########################################
+Ejecutando Avanzar
+Corta = 146
+Larga = 130
+Diferencia = 16
+###########################################
+Ejecutando Corregir
+Corta = 110
+Larga = 191
+Diferencia = 81
+###########################################
+Ejecutando Corregir
+Corta = 111
+Larga = 196
+Diferencia = 85
+###########################################
+Ejecutando Avanzar
+Corta = 115
+Larga = 208
+Diferencia = 93
+###########################################
+Ejecutando Avoid
+Corta = 145
+Larga = 208
+Diferencia = 63
+###########################################
+Corta = 200
+Larga = 211
+Diferencia = 11
+###########################################
+Corta = 225
+Larga = 158
+Diferencia = 67
+###########################################
+Corta = 294
+Larga = 511
+Diferencia = 217
+###########################################
+Ejecutando Avanzar
+Corta = 350
+Larga = 458
+Diferencia = 108
+###########################################
+Corta = 375
+Larga = 315
+Diferencia = 60
+###########################################
+Ejecutando Corregir
+Corta = 140
+Larga = 191
+Diferencia = 51
+###########################################
+Ejecutando Corregir
+Corta = 137
+Larga = 92
+Diferencia = 45
+###########################################
+Ejecutando Avanzar
+Corta = 145
+Larga = 211
+Diferencia = 66
+###########################################
+Ejecutando Avoid
+Corta = 131
+Larga = 191
+Diferencia = 60
+###########################################
+Corta = 171
+Larga = 231
+Diferencia = 60
+###########################################
+Corta = 230
+Larga = 351
+Diferencia = 121
+###########################################
+Corta = 269
+Larga = 398
+Diferencia = 129
+###########################################
+Corta = 395
+Larga = 840
+Diferencia = 445
+###########################################
+Ejecutando Avanzar
+Corta = 580
+Larga = 1600
+Diferencia = 1020
+###########################################
+Ejecutando Corregir
+Corta = 778
+Larga = 1600
+Diferencia = 822
+###########################################
+Ejecutando Avanzar
+Corta = 929
+Larga = 1600
+Diferencia = 671
+###########################################
+Corta = 993
+Larga = 1544
+Diferencia = 551
+###########################################
+Corta = 813
+Larga = 1441
+Diferencia = 628
+###########################################
+Ejecutando Corregir
+Corta = 601
+Larga = 1036
+Diferencia = 435
+###########################################
+Ejecutando Corregir
+Corta = 357
+Larga = 1022
+Diferencia = 665
+###########################################
+Ejecutando Corregir
+Corta = 618
+Larga = 1284
+Diferencia = 666
+###########################################
+Ejecutando Avanzar
+Corta = 883
+Larga = 1300
+Diferencia = 417
+###########################################
+Ejecutando Avoid
+Corta = 844
+Larga = 1039
+Diferencia = 195
+###########################################
+Corta = 585
+Larga = 1255
+Diferencia = 670
+###########################################
+Corta = 887
+Larga = 1428
+Diferencia = 541
+###########################################
+Corta = 661
+Larga = 1214
+Diferencia = 553
+###########################################
+Ejecutando Avanzar
+Corta = 661
+Larga = 636
+Diferencia = 25
+###########################################
+Corta = 692
+Larga = 1544
+Diferencia = 852
+###########################################
+Corta = 941
+Larga = 1531
+Diferencia = 590
+###########################################
+Corta = 1006
+Larga = 1142
+Diferencia = 136
+###########################################
+Corta = 865
+Larga = 1013
+Diferencia = 148
+###########################################
+Corta = 780
+Larga = 989
+Diferencia = 209
+###########################################
+Corta = 687
+Larga = 700
+Diferencia = 13
+###########################################
+Corta = 579
+Larga = 477
+Diferencia = 102
+###########################################
+Corta = 545
+Larga = 378
+Diferencia = 167
+###########################################
+Ejecutando Corregir
+Corta = 389
+Larga = 378
+Diferencia = 11
+###########################################
+Ejecutando Corregir
+Corta = 271
+Larga = 212
+Diferencia = 59
+###########################################
+Ejecutando Corregir
+Corta = 200
+Larga = 207
+Diferencia = 7
+###########################################
+
+
+
+
+
+
+
+
+
+#######################################################PRUEBA################################################
+

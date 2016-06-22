@@ -1,33 +1,37 @@
 package behaviors;
 
 import lejos.nxt.ColorSensor;
-import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.addon.GyroDirectionFinder;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
 import main.THBall.TurnSide;
+import utils.SensorColor;
 
 public class TirarNaranja implements Behavior {
 
 	static GyroDirectionFinder gdf = THBall.gdf;
-	static ColorSensor colorSensor = THBall.colorSensor;
-	static NXTRegulatedMotor catapulta = THBall.catapulta;
-	static NXTRegulatedMotor leftMotor = THBall.leftMotor;
-	static NXTRegulatedMotor rightMotor = THBall.rightMotor;
+	SensorColor colorSensor;
 	static TouchSensor leftTouchSensor = THBall.leftTouchSensor;
 	static TouchSensor rightTouchSensor = THBall.rightTouchSensor;
 	static int error = 5;
 	static boolean suppressed = false;
 
+	public TirarNaranja(SensorColor cs) {
+		colorSensor = cs;
+	}
+
 	public static boolean inRange(int min, int max, int value) {
 		// true if value is in range of reference
-		return ((value > min + error || value > min - error) && (value < max + error || value < max - error));
+		return ((value > min + error || value > min - error) && (value < max + error || value < max
+				- error));
 	}
 
 	@Override
 	public boolean takeControl() {
-		ColorSensor.Color color = colorSensor.getColor();
+		// al no ser el primero en pedir una medida en un ciclo del arbitrator
+		// no necesita pedir una nueva medida, usa la anterior
+		ColorSensor.Color color = colorSensor.getMeasurement(false);
 		int r = color.getRed();
 		int g = color.getGreen();
 		int b = color.getBlue();
@@ -42,10 +46,9 @@ public class TirarNaranja implements Behavior {
 		THBall.atrasar(250);
 		turnTo(90.0f);
 		THBall.avanzar();
-		while ((!leftTouchSensor.isPressed() && !rightTouchSensor.isPressed()) && !suppressed) {
-			// Delay.msDelay(1);
-			// THBall.timer++;
-		}
+		while ((!leftTouchSensor.isPressed() && !rightTouchSensor.isPressed())
+				&& !suppressed)
+			;
 		// si el comportamiento no fue suprimido por el evitar deadlock
 		if (!suppressed) {
 			THBall.stopMoving();
@@ -78,11 +81,13 @@ public class TirarNaranja implements Behavior {
 			// Delay.msDelay(1);
 			// THBall.timer++;
 			anguloActual = THBall.modAngulo(gdf.getDegrees());
-			if (THBall.inRangeAngle(anguloActual, anguloObjetivo, THBall.ERROR_PERMITIDO_ANGULO)) {
+			if (THBall.inRangeAngle(anguloActual, anguloObjetivo,
+					THBall.ERROR_PERMITIDO_ANGULO)) {
 				THBall.stopMoving();
 				break;
 			}
-			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
+			if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT)
+					&& (turnSide != TurnSide.RIGHT)) {
 				turnSide = TurnSide.RIGHT;
 				THBall.turnRight(THBall.SPEED_TURN);
 			} else if ((THBall.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)

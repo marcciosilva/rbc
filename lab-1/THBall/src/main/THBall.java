@@ -1,12 +1,7 @@
 package main;
 
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Queue;
-
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
-import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
@@ -14,31 +9,19 @@ import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.addon.GyroDirectionFinder;
 import lejos.nxt.addon.GyroSensor;
-import lejos.nxt.addon.LnrActrFirgelliNXT;
-import lejos.nxt.addon.OpticalDistanceSensor;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.RConsole;
 import lejos.nxt.remote.RemoteNXT;
-import lejos.robotics.EncoderMotor;
-import lejos.robotics.LinearActuator;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 import lejos.util.Delay;
-import behaviors.Agregacion;
-import behaviors.Avanzar;
-import behaviors.Avoid;
-import behaviors.Corregir;
-import behaviors.Dispersion;
-import behaviors.EvitarDeadlock;
-import behaviors.SensorManager;
+import utils.SensorColor;
+import utils.SensorSharp;
+import behaviors.DistanceTest;
 
 public class THBall {
-	// Sensor Manager
-	public static SensorManager SM;
-
-	// public static NXTCam cam;
 	public static long timer;
-	private static Arbitrator arbitrator;
+	private Arbitrator arbitrator;
 	public final static int SPEED_DRIVE = (int) (Motor.A.getMaxSpeed() / 2.0f);
 	public final static int SPEED_TURN = (int) (Motor.A.getMaxSpeed() / 6.0f);
 	public final static int SPEED_CORRECT = (int) (Motor.A.getMaxSpeed() / 32.0f);
@@ -47,42 +30,29 @@ public class THBall {
 	final static int CATAPULTA_MOVER = (int) (CATAPULTA_TIRAR / 10.0f);
 	public final static float ERROR_PERMITIDO_ANGULO = 10.0f;
 	// actuadores
-	public static LinearActuator lnrAct;
+	// public static LinearActuator lnrAct;
 	public static NXTRegulatedMotor leftMotor = Motor.A;
 	public static NXTRegulatedMotor rightMotor = Motor.C;
 	public static NXTRegulatedMotor catapulta = Motor.B;
 	// sensores
 	public static RemoteNXT remoteNxt;
-	public static OpticalDistanceSensor largaDistancia;
-	// OpticalDistanceSensor(SensorPort.S1);
-	public static OpticalDistanceSensor cortaDistancia;
-	public static Queue<Integer> largaDistanciaQueue = new Queue<Integer>();
-	public static Queue<Integer> cortaDistanciaQueue = new Queue<Integer>();
-	// promedios
-	// public static final Lock lockLargaDistanciaPromedio = new
-	// ReentrantLock();
-	public static int largaDistanciaPromedio = 0;
-	// public static final Lock lockCortaDistanciaPromedio = new
-	// ReentrantLock();
-	public static int cortaDistanciaPromedio = 0;
-	// OpticalDistanceSensor(SensorPort.S4);
-
+	private SensorSharp sensorLargaDistancia;
+	private SensorSharp sensorMediaDistancia;
+	private SensorSharp sensorMediaDistanciaMuerta;
 	public static GyroSensor gyro = new GyroSensor(SensorPort.S1);
-	// LCD.drawString("Calibrando", 0, 0);
 	public static GyroDirectionFinder gdf;
 	public static TouchSensor leftTouchSensor = new TouchSensor(SensorPort.S2);
 	public static TouchSensor rightTouchSensor = new TouchSensor(SensorPort.S4);
-	public static ColorSensor colorSensor = new ColorSensor(SensorPort.S3);
-
+	private SensorColor colorSensor;
 	public static float conversionAngles = 11.6f / 2f;
 
 	public static void main(String[] args) {
 
 		LCD.drawString("Presione algun boton", 0, 0);
 		Button.waitForAnyPress();
-
-		inicializar();
-		setupBehaviors();
+		THBall tb = new THBall();
+		tb.inicializar();
+		tb.setupBehaviors();
 		boolean exitMenu = false;
 		LCD.clear();
 		int buttonPressed = 0;
@@ -91,7 +61,7 @@ public class THBall {
 			if ((buttonPressed & Button.ID_ESCAPE) != Button.ID_ESCAPE) {
 				LCD.clear();
 				timer = System.currentTimeMillis();
-				arbitrator.start();
+				tb.arbitrator.start();
 				exitMenu = true;
 			} else
 				exitMenu = true;
@@ -101,26 +71,28 @@ public class THBall {
 	/**
 	 * Inicializa comportamientos y arbitrator
 	 */
-	private static void setupBehaviors() {
-		Behavior avanzar = new Avanzar();
-		Behavior avoid = new Avoid();
-		Behavior corregir = new Corregir();
-		// Behavior tirarAzul = new TirarAzul();
-		// // Behavior tengoNaranja = new TengoNaranja();
-		// Behavior tirarNaranja = new TirarNaranja();
-		Behavior dispersion = new Dispersion();
-		Behavior agregacion = new Agregacion();
-		Behavior evitarDeadlock = new EvitarDeadlock();
+	private void setupBehaviors() {
+		// Behavior avanzar = new Avanzar();
+		// Behavior avoid = new Avoid();
+		// Behavior corregir = new Corregir();
+		// Behavior tirarAzul = new TirarAzul(colorSensor);
+		// Behavior tirarNaranja = new TirarNaranja(colorSensor);
+		// Behavior dispersion = new Dispersion(sensorLargaDistancia,
+		// sensorMediaDistancia,
+		// sensorMediaDistanciaMuerta);
+		// Behavior agregacion = new Agregacion(sensorLargaDistancia,
+		// sensorMediaDistancia,
+		// sensorMediaDistanciaMuerta);
+		// Behavior evitarDeadlock = new EvitarDeadlock();
+
 		// pongo behaviors en orden de prioridad
 		// a mayor indice mayor prioridad
 		// Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja,
 		// tirarAzul,
 		// evitarDeadlock, dispersion, agregacion };
-		// Behavior behaviors[] = { agregacion, dispersion };
-		Behavior behaviors[] = { avanzar, corregir, avoid, dispersion, agregacion,
-				evitarDeadlock };
-		// tirarNaranja
-		// };
+		DistanceTest distanceTest = new DistanceTest(sensorLargaDistancia,
+				sensorMediaDistancia, sensorMediaDistanciaMuerta);
+		Behavior behaviors[] = { distanceTest };
 		// declaro arbitrator
 		arbitrator = new Arbitrator(behaviors);
 	}
@@ -129,99 +101,55 @@ public class THBall {
 	 * El robot deja de moverse
 	 */
 	public static void stopMoving() {
-		leftMotor.stop();
-		rightMotor.stop();
+		try {
+			leftMotor.stop();
+			rightMotor.stop();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Establece la velocidad de los motores de movilidad
 	 */
 	public static void setSpeed(int speed) {
-		leftMotor.setSpeed(speed);
-		rightMotor.setSpeed(speed);
+		try {
+			leftMotor.setSpeed(speed);
+			rightMotor.setSpeed(speed);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Inicializa sensores remotos y threads de polling a sensores de distancia
 	 */
-	public static void inicializar() {
+	public void inicializar() {
 		try {
 			remoteNxt = new RemoteNXT("rbc4_2", Bluetooth.getConnector());
-			largaDistancia = new OpticalDistanceSensor(remoteNxt.S2);
-			cortaDistancia = new OpticalDistanceSensor(remoteNxt.S1);
+			sensorLargaDistancia = new SensorSharp(remoteNxt.S2);
+			sensorMediaDistancia = new SensorSharp(remoteNxt.S1);
+			sensorMediaDistanciaMuerta = new SensorSharp(remoteNxt.S3);
 			// inicializacion de actuador lineal
-			lnrAct = new LnrActrFirgelliNXT((EncoderMotor) remoteNxt.B);
-			lnrAct.moveTo(200, false);
+			remoteNxt.C.resetTachoCount();
+			remoteNxt.C.rotate(1000);
+			remoteNxt.C.rotate(1000);
 			RConsole.openAny(10000);
-			SM = new SensorManager();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			LCD.clear();
-			LCD.drawString(e.getMessage(), 0, 0);
+			LCD.drawString(e.getClass().toString(), 0, 0);
 			System.exit(1);
 		}
-		// inicializo threads para promediar medidas de los sharps
-		(new Thread() {
-			float promedioLocal = 0.0f;
-			int cantMediciones = 1;
-
-			@Override
-			public void run() {
-				while (true) {
-					try {
-						if (THBall.largaDistanciaQueue.size() == cantMediciones)
-							// saco un elemento
-							THBall.largaDistanciaQueue.pop();
-						// agrego una medida de uno de los sharps
-						THBall.largaDistanciaQueue.push(largaDistancia.getDistance());
-						// calculo nuevo promedio
-						promedioLocal = 0.0f;
-						Enumeration<Integer> elements = THBall.largaDistanciaQueue
-								.elements();
-						while (elements.hasMoreElements()) {
-							promedioLocal += elements.nextElement();
-						}
-						promedioLocal /= (float) THBall.largaDistanciaQueue.size();
-						THBall.largaDistanciaPromedio = (int) promedioLocal;
-					} catch (Exception e) {
-						RConsole.println(e.toString());
-					}
-				}
-			}
-		}).start();
-
-		(new Thread() {
-			float promedioLocal = 0.0f;
-			int cantMediciones = 1;
-
-			@Override
-			public void run() {
-				while (true) {
-					try {
-						if (THBall.cortaDistanciaQueue.size() == cantMediciones)
-							// saco un elemento
-							THBall.cortaDistanciaQueue.pop();
-						// agrego una medida de uno de los sharps
-						THBall.cortaDistanciaQueue.push(cortaDistancia.getDistance());
-						// calculo nuevo promedio
-						promedioLocal = 0.0f;
-						Enumeration<Integer> elements = THBall.cortaDistanciaQueue
-								.elements();
-						while (elements.hasMoreElements()) {
-							promedioLocal += elements.nextElement();
-						}
-						promedioLocal /= (float) THBall.cortaDistanciaQueue.size();
-						THBall.cortaDistanciaPromedio = (int) promedioLocal;
-					} catch (Exception e) {
-						RConsole.println(e.toString());
-					}
-				}
-			}
-		}).start();
+		colorSensor = new SensorColor(SensorPort.S3);
 		gdf = new GyroDirectionFinder(gyro, true);
+		// espera para que el giroscopio se calibre
 		Delay.msDelay(5000);
-		// gdf.setDegreesCartesian(0.0f);
 		gdf.setDegrees(0.0f);
-		catapulta.resetTachoCount();
+		try {
+			catapulta.resetTachoCount();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 		bajarCatapulta();
 
 		Button.ESCAPE.addButtonListener(new ButtonListener() {
@@ -232,13 +160,16 @@ public class THBall {
 			@Override
 			public void buttonPressed(Button b) {
 				try {
-					arbitrator.wait(20000);
-				} catch (InterruptedException e) {
-					RConsole.println(e.getClass().toString());
+					remoteNxt.C.rotate(-1000, false);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				lnrAct.stop();
-				lnrAct.moveTo(-200, true);
-				System.exit(0);
+				try {
+					remoteNxt.C.rotate(-1000, false);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 			}
 		});
 	}
@@ -247,16 +178,24 @@ public class THBall {
 	 * Baja la catapulta hacia la posicion de recoleccion
 	 */
 	public static void bajarCatapulta() {
-		catapulta.setSpeed(CATAPULTA_MOVER);
-		catapulta.rotateTo(-190, false);
+		try {
+			catapulta.setSpeed(CATAPULTA_MOVER);
+			catapulta.rotateTo(-190, false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Sube la catapulta hacia la posicion de origen
 	 */
 	public static void subirCatapulta() {
-		catapulta.setSpeed(CATAPULTA_MOVER);
-		catapulta.rotateTo(0, false);
+		try {
+			catapulta.setSpeed(CATAPULTA_MOVER);
+			catapulta.rotateTo(0, false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -267,16 +206,24 @@ public class THBall {
 	 *            Cantidad de grados a mover
 	 */
 	public static void moverCatapulta(int angle) {
-		catapulta.setSpeed(CATAPULTA_MOVER);
-		catapulta.rotateTo(angle, false);
+		try {
+			catapulta.setSpeed(CATAPULTA_MOVER);
+			catapulta.rotateTo(angle, false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * El robot arroja la pelota
 	 */
 	public static void tirarPelota() {
-		catapulta.setSpeed(CATAPULTA_TIRAR);
-		catapulta.rotateTo(-60, false);
+		try {
+			catapulta.setSpeed(CATAPULTA_TIRAR);
+			catapulta.rotateTo(-60, false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		bajarCatapulta();
 	}
 
@@ -284,9 +231,13 @@ public class THBall {
 	 * El robot avanza a velocidad SPEED_DRIVE
 	 */
 	public static void avanzar() {
-		setSpeed(SPEED_DRIVE);
-		leftMotor.forward();
-		rightMotor.forward();
+		try {
+			setSpeed(SPEED_DRIVE);
+			leftMotor.forward();
+			rightMotor.forward();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -296,9 +247,13 @@ public class THBall {
 	 *            Cantidad de milisegundos
 	 */
 	public static void atrasar(int ms) {
-		setSpeed(SPEED_DRIVE);
-		leftMotor.backward();
-		rightMotor.backward();
+		try {
+			setSpeed(SPEED_DRIVE);
+			leftMotor.backward();
+			rightMotor.backward();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		Delay.msDelay(ms);
 		stopMoving();
 	}
@@ -345,60 +300,6 @@ public class THBall {
 			return TurnSide.LEFT;
 		else
 			return TurnSide.RIGHT;
-	}
-
-	/**
-	 * Gira la cantidad de grados indicada por parametro
-	 * 
-	 * @param angulo
-	 *            Cantidad de grados a girar
-	 */
-	public static void turnBy(float angulo) {
-		float anguloActual = modAngulo(gdf.getDegrees());
-		float anguloObjetivo = anguloActual + modAngulo(angulo);
-		turnTo(anguloObjetivo);
-	}
-
-	/**
-	 * Rota hacia el angulo objetivo
-	 * 
-	 * @param anguloObjetivo
-	 *            Angulo objetivo
-	 */
-	public static void turnTo(float anguloObjetivo) {
-		setSpeed(SPEED_TURN);
-		float anguloActual = modAngulo(gdf.getDegrees());
-		// por si me pasan un valor de afuera y no desde turnBy
-		anguloObjetivo = modAngulo(anguloObjetivo);
-		TurnSide turnSide;
-		if (FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) {
-			turnSide = TurnSide.RIGHT;
-			turnRight(SPEED_TURN);
-		} else {
-			turnSide = TurnSide.LEFT;
-			turnLeft(SPEED_TURN);
-		}
-		while (true) {
-			anguloActual = modAngulo(gdf.getDegrees());
-			if (inRangeAngle(anguloActual, anguloObjetivo, ERROR_PERMITIDO_ANGULO)) {
-				stopMoving();
-				break;
-			}
-			if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT)
-					&& (turnSide != TurnSide.RIGHT)) {
-				turnSide = TurnSide.RIGHT;
-				turnRight(SPEED_TURN);
-			} else if ((FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)
-					&& turnSide != TurnSide.LEFT) {
-				turnSide = TurnSide.LEFT;
-				turnLeft(SPEED_TURN);
-			}
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	/***
@@ -448,9 +349,13 @@ public class THBall {
 	 *            Nueva velocidad de los motores
 	 */
 	public static void turnRight(int speed) {
-		setSpeed(speed);
-		leftMotor.forward();
-		rightMotor.backward();
+		try {
+			setSpeed(speed);
+			leftMotor.forward();
+			rightMotor.backward();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/***
@@ -461,9 +366,13 @@ public class THBall {
 	 *            Nueva velocidad de los motores
 	 */
 	public static void turnLeft(int speed) {
-		setSpeed(speed);
-		rightMotor.forward();
-		leftMotor.backward();
+		try {
+			setSpeed(speed);
+			rightMotor.forward();
+			leftMotor.backward();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/***
@@ -486,9 +395,17 @@ public class THBall {
 	 * El robot se mueve hacia atras a velocidad SPEED_DRIVE
 	 */
 	public static void atrasar() {
-		setSpeed(SPEED_DRIVE);
-		leftMotor.backward();
-		rightMotor.backward();
+		try {
+			setSpeed(SPEED_DRIVE);
+			leftMotor.backward();
+			rightMotor.backward();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static boolean hayRobot(int diferencia) {
+		return diferencia > 400;// && diferencia < 700;
 	}
 
 }
