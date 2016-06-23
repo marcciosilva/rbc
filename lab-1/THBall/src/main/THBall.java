@@ -1,8 +1,6 @@
 package main;
 
-import behaviors.DistanceTest;
 import lejos.nxt.Button;
-import lejos.nxt.ButtonListener;
 import lejos.nxt.LCD;
 import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
@@ -15,6 +13,14 @@ import sensors.SensorColor;
 import sensors.SensorGDF;
 import sensors.SensorSharp;
 import utils.Movilidad;
+import behaviors.Agregacion;
+import behaviors.Avanzar;
+import behaviors.Avoid;
+import behaviors.Corregir;
+import behaviors.Dispersion;
+import behaviors.EvitarDeadlock;
+import behaviors.TirarAzul;
+import behaviors.TirarNaranja;
 
 public class THBall {
 	public static long timer;
@@ -56,25 +62,24 @@ public class THBall {
 	 * Inicializa comportamientos y arbitrator
 	 */
 	private void setupBehaviors() {
-		// Behavior avanzar = new Avanzar();
-		// Behavior avoid = new Avoid(gdf);
-		// Behavior corregir = new Corregir();
-		// Behavior tirarAzul = new TirarAzul(colorSensor, gdf);
-		// Behavior tirarNaranja = new TirarNaranja(colorSensor, gdf);
-		// Behavior dispersion = new Dispersion(sensorLargaDistancia,
-		// sensorMediaDistancia, sensorMediaDistanciaMuerta);
-		// Behavior agregacion = new Agregacion(sensorLargaDistancia,
-		// sensorMediaDistancia, sensorMediaDistanciaMuerta);
-		// Behavior evitarDeadlock = new EvitarDeadlock(gdf);
+		Behavior avanzar = new Avanzar();
+		Behavior avoid = new Avoid(gdf);
+		Behavior corregir = new Corregir();
+		Behavior tirarAzul = new TirarAzul(colorSensor);
+		Behavior tirarNaranja = new TirarNaranja(colorSensor, gdf);
+		Behavior dispersion = new Dispersion(sensorLargaDistancia, sensorMediaDistancia,
+				sensorMediaDistanciaMuerta);
+		Behavior agregacion = new Agregacion(sensorLargaDistancia, sensorMediaDistancia,
+				sensorMediaDistanciaMuerta);
+		Behavior evitarDeadlock = new EvitarDeadlock(gdf);
 
 		// pongo behaviors en orden de prioridad
 		// a mayor indice mayor prioridad
-		// Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja,
-		// tirarAzul,
-		// evitarDeadlock, dispersion, agregacion };
-		DistanceTest distanceTest = new DistanceTest(sensorLargaDistancia, sensorMediaDistancia,
-				sensorMediaDistanciaMuerta);
-		Behavior behaviors[] = { distanceTest };
+		Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja, tirarAzul,
+				dispersion, agregacion, evitarDeadlock };
+		// DistanceTest distanceTest = new DistanceTest(sensorLargaDistancia,
+		// sensorMediaDistancia, sensorMediaDistanciaMuerta);
+		// Behavior behaviors[] = { dispersion, agregacion };
 		// declaro arbitrator
 		arbitrator = new Arbitrator(behaviors);
 	}
@@ -90,10 +95,10 @@ public class THBall {
 			sensorMediaDistancia = new SensorSharp(remoteNxt.S1);
 			sensorMediaDistanciaMuerta = new SensorSharp(remoteNxt.S3);
 			// inicializacion de actuador lineal
-			remoteNxt.C.resetTachoCount();
-			// hack
-			remoteNxt.C.rotate(1000);
-			remoteNxt.C.rotate(1000);
+			// remoteNxt.C.resetTachoCount();
+			// // hack
+			// remoteNxt.C.rotate(1000);
+			// remoteNxt.C.rotate(1000);
 			RConsole.openAny(10000);
 		} catch (Exception e) {
 			LCD.clear();
@@ -106,28 +111,28 @@ public class THBall {
 		Movilidad.resetearCatapulta();
 		Movilidad.bajarCatapulta();
 
-		// listener para bajar catapulta
-		Button.ESCAPE.addButtonListener(new ButtonListener() {
-			@Override
-			public void buttonReleased(Button b) {
-			}
-
-			@Override
-			public void buttonPressed(Button b) {
-				Movilidad.stopMoving();
-				try {
-					remoteNxt.C.rotate(-1000, false);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				try {
-					remoteNxt.C.rotate(-1000, false);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-		});
+		// // listener para bajar catapulta
+		// Button.ESCAPE.addButtonListener(new ButtonListener() {
+		// @Override
+		// public void buttonReleased(Button b) {
+		// }
+		//
+		// @Override
+		// public void buttonPressed(Button b) {
+		// Movilidad.stopMoving();
+		// try {
+		// remoteNxt.C.rotate(-1000, false);
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// try {
+		// remoteNxt.C.rotate(-1000, false);
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		//
+		// }
+		// });
 	}
 
 }

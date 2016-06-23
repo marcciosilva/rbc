@@ -11,7 +11,7 @@ public class LnrActTest {
 	public static void main(String[] args) {
 
 		// primera prueba (de control del actuador)
-		final LinearActuator actuator = new LnrActrFirgelliNXT(MotorPort.B);
+		final LinearActuator actuator = new LnrActrFirgelliNXT(MotorPort.C);
 		actuator.resetTachoCount();
 		// actuator.moveTo(27, false);
 		LCD.clear();

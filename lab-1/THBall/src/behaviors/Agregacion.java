@@ -2,7 +2,7 @@ package behaviors;
 
 import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
-import lejos.util.Delay;
+import main.THBall;
 import sensors.SensorSharp;
 import utils.Movilidad;
 import utils.Suppressable;
@@ -13,6 +13,10 @@ public class Agregacion extends Suppressable implements Behavior {
 	SensorSharp sensorLargaDistancia;
 	SensorSharp sensorMediaDistancia;
 	SensorSharp sensorMediaDistanciaMuerta;
+	int medidaMedia;
+	int medidaLarga;
+	int medidaMediaMuerta;
+	int diferenciaSensoresMedia;
 
 	public Agregacion(SensorSharp sld, SensorSharp smd, SensorSharp smdm) {
 		sensorLargaDistancia = sld;
@@ -23,23 +27,35 @@ public class Agregacion extends Suppressable implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		Delay.msDelay(1000);
-		int medidaCorta = sensorMediaDistancia.getMeasurement(false);
-		int medidaLarga = sensorLargaDistancia.getMeasurement(false);
-		int diferencia = Math.abs(medidaCorta - medidaLarga);
-		RConsole.println("Corta = " + Integer.toString(medidaCorta));
-		RConsole.println("Larga = " + Integer.toString(medidaLarga));
-		RConsole.println("Diferencia = " + Integer.toString(diferencia));
-		if (medidaCorta > 600 && Utils.hayRobot(diferencia)) {
-			RConsole.println("Agregacion");
-		}
-		return false;
+		medidaMedia = sensorMediaDistancia.getMeasurement(true);
+		medidaLarga = sensorLargaDistancia.getMeasurement(true);
+		medidaMediaMuerta = sensorMediaDistanciaMuerta.getMeasurement(true);
+		diferenciaSensoresMedia = Math.abs(medidaMedia - medidaMediaMuerta);
+
+		return ((Utils.inRange(medidaMedia, 400, 20) || Utils.inRange(medidaMediaMuerta,
+				400, 20)) && diferenciaSensoresMedia < 120 && (!Utils.inRange(
+				medidaLarga, medidaMedia, 100) && !Utils.inRange(medidaLarga,
+				medidaMediaMuerta, 100)));
 	}
 
 	@Override
 	public void action() {
+		RConsole.println("###############");
 		RConsole.println("Agregacion");
+		RConsole.println("Media = " + Integer.toString(medidaMedia));
+		RConsole.println("Larga = " + Integer.toString(medidaLarga));
+		RConsole.println("Media Muerta = " + Integer.toString(medidaMediaMuerta));
+		RConsole.println("Diferencia Larga y Media = "
+				+ Integer.toString(Math.abs(medidaMedia - medidaLarga)));
+		RConsole.println("Diferencia Media y Media Muerta = "
+				+ Integer.toString(Math.abs(medidaMedia - medidaMediaMuerta)));
+		RConsole.println("###############");
+		setSuppressed(false);
+		THBall.timer = System.currentTimeMillis();
 		Movilidad.avanzar();
+		// while (!getSuppressed()) {
+		// Thread.yield();
+		// }
 	}
 
 	@Override

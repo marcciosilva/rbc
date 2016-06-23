@@ -1877,3 +1877,1003 @@ Diferencia = 7
 
 #######################################################PRUEBA################################################
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+####### PRUEBA 
+estatica con configuracion de sensor de larga montado en actuador lineal
+
+Console open
+Corta = 574
+Larga = 564
+Diferencia = 10
+###############################################
+Corta = 574
+Larga = 547
+Diferencia = 27
+###############################################
+Corta = 547
+Larga = 547
+Diferencia = 0
+###############################################
+Corta = 547
+Larga = 574
+Diferencia = 27
+###############################################
+Corta = 547
+Larga = 574
+Diferencia = 27
+###############################################
+Corta = 547
+Larga = 574
+Diferencia = 27
+###############################################
+Corta = 574
+Larga = 547
+Diferencia = 27
+###############################################
+Corta = 574
+Larga = 574
+Diferencia = 0
+###############################################
+Corta = 574
+Larga = 569
+Diferencia = 5
+###############################################
+Corta = 547
+Larga = 585
+Diferencia = 38
+###############################################
+Corta = 561
+Larga = 574
+Diferencia = 13
+###############################################
+Corta = 561
+Larga = 574
+Diferencia = 13
+###############################################
+Corta = 547
+Larga = 585
+Diferencia = 38
+###############################################
+Corta = 547
+Larga = 574
+Diferencia = 27
+###############################################
+Corta = 574
+Larga = 577
+Diferencia = 3
+###############################################
+Corta = 547
+Larga = 574
+Diferencia = 27
+###############################################
+Corta = 568
+Larga = 574
+Diferencia = 6
+###############################################
+Corta = 561
+Larga = 574
+Diferencia = 13
+###############################################
+Corta = 574
+Larga = 547
+Diferencia = 27
+###############################################
+Corta = 542
+Larga = 332
+Diferencia = 210
+###############################################
+Corta = 542
+Larga = 327
+Diferencia = 215
+###############################################
+Corta = 547
+Larga = 574
+Diferencia = 27
+###############################################
+Corta = 547
+Larga = 574
+Diferencia = 27
+###############################################
+Corta = 574
+Larga = 574
+Diferencia = 0
+###############################################
+Corta = 574
+Larga = 574
+Diferencia = 0
+###############################################
+Corta = 547
+Larga = 574
+Diferencia = 27
+###############################################
+Corta = 574
+Larga = 574
+Diferencia = 0
+###############################################
+Corta = 574
+Larga = 574
+Diferencia = 0
+###############################################
+Corta = 574
+Larga = 547
+Diferencia = 27
+###############################################
+Corta = 547
+Larga = 574
+Diferencia = 27
+###############################################
+Corta = 574
+Larga = 574
+Diferencia = 0
+###############################################
+Corta = 574
+Larga = 574
+Diferencia = 0
+###############################################
+Corta = 574
+Larga = 574
+Diferencia = 0
+###############################################
+Corta = 574
+Larga = 547
+Diferencia = 27
+###############################################
+Corta = 574
+Larga = 547
+Diferencia = 27
+###############################################
+Corta = 574
+Larga = 574
+Diferencia = 0
+###############################################
+Corta = 574
+Larga = 574
+Diferencia = 0
+###############################################
+Corta = 574
+Larga = 574
+Diferencia = 0
+###############################################
+Corta = 561
+Larga = 574
+Diferencia = 13
+###############################################
+Corta = 574
+Larga = 585
+Diferencia = 11
+###############################################
+Corta = 569
+Larga = 585
+Diferencia = 16
+###############################################
+Corta = 561
+Larga = 574
+Diferencia = 13
+###############################################
+Corta = 547
+Larga = 574
+Diferencia = 27
+###############################################
+Corta = 547
+Larga = 574
+Diferencia = 27
+###############################################
+Corta = 547
+Larga = 574
+Diferencia = 27
+###############################################
+Corta = 547
+Larga = 547
+Diferencia = 0
+###############################################
+Corta = 574
+Larga = 547
+Diferencia = 27
+###############################################
+Corta = 561
+Larga = 574
+Diferencia = 13
+###############################################
+Corta = 547
+Larga = 577
+Diferencia = 30
+###############################################
+Corta = 547
+Larga = 568
+Diferencia = 21
+###############################################
+
+
+
+
+
+
+
+
+
+
+
+#######PRUEBA misma que la anterior pero en movimiento, recorriendo a lo largo de la cancha
+
+se determina que la diferencia para robot debe ser menor a 700
+
+Console open
+Corta = 503
+Larga = 1600
+Diferencia = 1097
+Ejecutando Avanzar
+Corta = 544
+Larga = 1600
+Diferencia = 1056
+Corta = 1600
+Larga = 1600
+Diferencia = 0
+Agregacion
+Corta = 547
+Larga = 1600
+Diferencia = 1053
+Corta = 536
+Larga = 1247
+Diferencia = 711
+Corta = 1273
+Larga = 1405
+Diferencia = 132
+Agregacion
+Corta = 1273
+Larga = 1124
+Diferencia = 149
+Agregacion
+Corta = 647
+Larga = 1011
+Diferencia = 364
+Agregacion
+Corta = 831
+Larga = 742
+Diferencia = 89
+Agregacion
+Corta = 677
+Larga = 564
+Diferencia = 113
+Agregacion
+Corta = 536
+Larga = 471
+Diferencia = 65
+
+
+
+
+
+
+
+
+
+
+
+
+
+#######PRUEBA 
+estatica contra zona muerta, agregando otro sensor de media distancia abajo para la zona muerta
+
+
+Console open
+Media = 1124
+Larga = 1158
+Media Muerta = 1120
+Diferencia Larga y Media = 34
+Diferencia Media y Media Muerta = 4
+#################
+Media = 1124
+Larga = 299
+Media Muerta = 1120
+Diferencia Larga y Media = 825
+Diferencia Media y Media Muerta = 4
+#################
+Media = 1343
+Larga = 877
+Media Muerta = 297
+Diferencia Larga y Media = 466
+Diferencia Media y Media Muerta = 1046
+#################
+Media = 298
+Larga = 298
+Media Muerta = 800
+Diferencia Larga y Media = 0
+Diferencia Media y Media Muerta = 502
+#################
+Media = 1090
+Larga = 298
+Media Muerta = 297
+Diferencia Larga y Media = 792
+Diferencia Media y Media Muerta = 793
+#################
+Media = 1090
+Larga = 298
+Media Muerta = 297
+Diferencia Larga y Media = 792
+Diferencia Media y Media Muerta = 793
+#################
+Media = 752
+Larga = 1326
+Media Muerta = 297
+Diferencia Larga y Media = 574
+Diferencia Media y Media Muerta = 455
+#################
+Media = 752
+Larga = 1482
+Media Muerta = 297
+Diferencia Larga y Media = 730
+Diferencia Media y Media Muerta = 455
+#################
+Media = 727
+Larga = 1312
+Media Muerta = 295
+Diferencia Larga y Media = 585
+Diferencia Media y Media Muerta = 432
+#################
+Media = 1300
+Larga = 1120
+Media Muerta = 265
+Diferencia Larga y Media = 180
+Diferencia Media y Media Muerta = 1035
+#################
+Media = 1300
+Larga = 1085
+Media Muerta = 800
+Diferencia Larga y Media = 215
+Diferencia Media y Media Muerta = 500
+#################
+Media = 1300
+Larga = 1085
+Media Muerta = 245
+Diferencia Larga y Media = 215
+Diferencia Media y Media Muerta = 1055
+#################
+Media = 1482
+Larga = 800
+Media Muerta = 1252
+Diferencia Larga y Media = 682
+Diferencia Media y Media Muerta = 230
+#################
+Media = 795
+Larga = 1414
+Media Muerta = 246
+Diferencia Larga y Media = 619
+Diferencia Media y Media Muerta = 549
+#################
+Media = 1215
+Larga = 1392
+Media Muerta = 246
+Diferencia Larga y Media = 177
+Diferencia Media y Media Muerta = 969
+#################
+Media = 1215
+Larga = 1392
+Media Muerta = 245
+Diferencia Larga y Media = 177
+Diferencia Media y Media Muerta = 970
+#################
+Media = 1343
+Larga = 1392
+Media Muerta = 246
+Diferencia Larga y Media = 49
+Diferencia Media y Media Muerta = 1097
+#################
+Media = 1343
+Larga = 571
+Media Muerta = 246
+Diferencia Larga y Media = 772
+Diferencia Media y Media Muerta = 1097
+#################
+Media = 1343
+Larga = 245
+Media Muerta = 246
+Diferencia Larga y Media = 1098
+Diferencia Media y Media Muerta = 1097
+#################
+Media = 1054
+Larga = 800
+Media Muerta = 245
+Diferencia Larga y Media = 254
+Diferencia Media y Media Muerta = 809
+#################
+Media = 760
+Larga = 1103
+Media Muerta = 245
+Diferencia Larga y Media = 343
+Diferencia Media y Media Muerta = 515
+#################
+Media = 543
+Larga = 1326
+Media Muerta = 1215
+Diferencia Larga y Media = 783
+Diferencia Media y Media Muerta = 672
+#################
+Media = 543
+Larga = 1390
+Media Muerta = 1215
+Diferencia Larga y Media = 847
+Diferencia Media y Media Muerta = 672
+#################
+Media = 1120
+Larga = 1252
+Media Muerta = 1414
+Diferencia Larga y Media = 132
+Diferencia Media y Media Muerta = 294
+#################
+Media = 1120
+Larga = 1252
+Media Muerta = 246
+Diferencia Larga y Media = 132
+Diferencia Media y Media Muerta = 874
+#################
+Media = 1120
+Larga = 1252
+Media Muerta = 245
+Diferencia Larga y Media = 132
+Diferencia Media y Media Muerta = 875
+#################
+Media = 727
+Larga = 1390
+Media Muerta = 245
+Diferencia Larga y Media = 663
+Diferencia Media y Media Muerta = 482
+#################
+Media = 727
+Larga = 800
+Media Muerta = 245
+Diferencia Larga y Media = 73
+Diferencia Media y Media Muerta = 482
+#################
+Media = 1200
+Larga = 1326
+Media Muerta = 246
+Diferencia Larga y Media = 126
+Diferencia Media y Media Muerta = 954
+#################
+Media = 1200
+Larga = 1326
+Media Muerta = 245
+Diferencia Larga y Media = 126
+Diferencia Media y Media Muerta = 955
+#################
+Media = 1200
+Larga = 1326
+Media Muerta = 1085
+Diferencia Larga y Media = 126
+Diferencia Media y Media Muerta = 115
+#################
+Media = 1300
+Larga = 1326
+Media Muerta = 1414
+Diferencia Larga y Media = 26
+Diferencia Media y Media Muerta = 114
+#################
+Media = 760
+Larga = 1167
+Media Muerta = 245
+Diferencia Larga y Media = 407
+Diferencia Media y Media Muerta = 515
+#################
+Media = 760
+Larga = 1127
+Media Muerta = 246
+Diferencia Larga y Media = 367
+Diferencia Media y Media Muerta = 514
+#################
+Media = 760
+Larga = 1127
+Media Muerta = 246
+Diferencia Larga y Media = 367
+Diferencia Media y Media Muerta = 514
+#################
+Media = 760
+Larga = 245
+Media Muerta = 245
+Diferencia Larga y Media = 515
+Diferencia Media y Media Muerta = 515
+#################
+Media = 246
+Larga = 1306
+Media Muerta = 246
+Diferencia Larga y Media = 1060
+Diferencia Media y Media Muerta = 0
+#################
+Media = 246
+Larga = 1326
+Media Muerta = 1258
+Diferencia Larga y Media = 1080
+Diferencia Media y Media Muerta = 1012
+#################
+
+
+
+
+
+
+######PRUEBA
+estatico contra caja a ver que onda
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#####################PRUEBA########################
+
+Prueba contra caja con zona muerta en medio: la idea es determinar la distancia mínima a la que se puede encontrar un robot desde el otro lado de la zona muerta, con una caja (porque va a estar lo más cerca que puede estar un robot).
+La distancia obtenida va a ser lo mínimo para declarar que se está en zona muerta
+
+Se determina que por encima de una diferencia de 120 mm, se puede decir que se está en zona muerta
+
+Media = 378
+Media Muerta = 249
+Diferencia Media y Media Muerta = 129
+#################
+Media = 378
+Media Muerta = 251
+Diferencia Media y Media Muerta = 127
+#################
+Media = 385
+Media Muerta = 251
+Diferencia Media y Media Muerta = 134
+#################
+Media = 378
+Media Muerta = 252
+Diferencia Media y Media Muerta = 126
+#################
+Media = 375
+Media Muerta = 255
+Diferencia Media y Media Muerta = 120
+#################
+Media = 378
+Media Muerta = 245
+Diferencia Media y Media Muerta = 133
+#################
+Media = 378
+Media Muerta = 250
+Diferencia Media y Media Muerta = 128
+#################
+Media = 378
+Media Muerta = 250
+Diferencia Media y Media Muerta = 128
+#################
+Media = 378
+Media Muerta = 249
+Diferencia Media y Media Muerta = 129
+#################
+Media = 378
+Media Muerta = 248
+Diferencia Media y Media Muerta = 130
+#################
+Media = 378
+Media Muerta = 252
+Diferencia Media y Media Muerta = 126
+#################
+Media = 378
+Media Muerta = 252
+Diferencia Media y Media Muerta = 126
+#################
+Media = 388
+Media Muerta = 251
+Diferencia Media y Media Muerta = 137
+#################
+Media = 378
+Media Muerta = 251
+Diferencia Media y Media Muerta = 127
+#################
+Media = 385
+Media Muerta = 249
+Diferencia Media y Media Muerta = 136
+#################
+Media = 378
+Media Muerta = 251
+Diferencia Media y Media Muerta = 127
+#################
+Media = 378
+Media Muerta = 251
+Diferencia Media y Media Muerta = 127
+#################
+Media = 378
+Media Muerta = 249
+Diferencia Media y Media Muerta = 129
+#################
+Media = 378
+Media Muerta = 249
+Diferencia Media y Media Muerta = 129
+#################
+Media = 378
+Media Muerta = 248
+Diferencia Media y Media Muerta = 130
+#################
+Media = 378
+Media Muerta = 250
+Diferencia Media y Media Muerta = 128
+#################
+Media = 378
+Media Muerta = 251
+Diferencia Media y Media Muerta = 127
+#################
+Media = 389
+Media Muerta = 249
+Diferencia Media y Media Muerta = 140
+#################
+Media = 378
+Media Muerta = 249
+Diferencia Media y Media Muerta = 129
+#################
+Media = 378
+Media Muerta = 245
+Diferencia Media y Media Muerta = 133
+#################
+Media = 378
+Media Muerta = 252
+Diferencia Media y Media Muerta = 126
+#################
+Media = 378
+Media Muerta = 252
+Diferencia Media y Media Muerta = 126
+#################
+Media = 378
+Media Muerta = 249
+Diferencia Media y Media Muerta = 129
+#################
+Media = 378
+Media Muerta = 252
+Diferencia Media y Media Muerta = 126
+#################
+
+
+
+
+
+
+
+
+###################################PRUEBA################################
+
+Se pone caja en un lado de la cancha, y el robot va hacia ahi
+La idea es darle el mejor caso posible a los sensores de media distancia, para ver cual va a ser la diferencia con respecto al sensor de larga distancia
+
+Se concluye que por encima de 500 se puede estar frente a un robot
+
+
+Console open
+Media = 603
+Larga = 1326
+Media Muerta = 615
+Diferencia Larga y Media = 723
+Diferencia Media y Media Muerta = 12
+#################
+Ejecutando Avanzar
+Media = 800
+Larga = 1600
+Media Muerta = 800
+Diferencia Larga y Media = 800
+Diferencia Media y Media Muerta = 0
+#################
+Media = 800
+Larga = 1390
+Media Muerta = 686
+Diferencia Larga y Media = 590
+Diferencia Media y Media Muerta = 114
+#################
+Media = 560
+Larga = 1120
+Media Muerta = 70
+Diferencia Larga y Media = 560
+Diferencia Media y Media Muerta = 490
+#################
+
+
+
+
+
+
+####################################PRUEBA################################
+
+Se prueba contra una pared pelada a ver cual es la diferencia entre el de larga y media
+
+Si la diferencia entre sensores está por encima de 700, es porque alguno llegó al límite
+
+Console open
+Media = 543
+Larga = 1600
+Media Muerta = 580
+Diferencia Larga y Media = 1057
+Diferencia Media y Media Muerta = 37
+#################
+Ejecutando Avanzar
+Media = 453
+Larga = 1600
+Media Muerta = 800
+Diferencia Larga y Media = 1147
+Diferencia Media y Media Muerta = 347
+#################
+Media = 547
+Larga = 1420
+Media Muerta = 376
+Diferencia Larga y Media = 873
+Diferencia Media y Media Muerta = 171
+#################
+Media = 695
+Larga = 1162
+Media Muerta = 565
+Diferencia Larga y Media = 467
+Diferencia Media y Media Muerta = 130
+#################
+Media = 800
+Larga = 900
+Media Muerta = 638
+Diferencia Larga y Media = 100
+Diferencia Media y Media Muerta = 162
+#################
+Media = 640
+Larga = 622
+Media Muerta = 425
+Diferencia Larga y Media = 18
+Diferencia Media y Media Muerta = 215
+#################
+Media = 408
+Larga = 373
+Media Muerta = 369
+Diferencia Larga y Media = 35
+Diferencia Media y Media Muerta = 39
+#################
+
+
+
+Agregation
+
+
+Si uno de media está en el entorno de los 600, o el otro, 
+y si los de media están por debajo de 120
+
+La distancia larga no debe estar inRange (con error de 100) con los de media
+
+Dispersion
+
+Si uno u otro de media está en el entorno de los 300 y los de media tienen diferencia debajo de 120
+
+La distancia larga no debe estar inRange (con error de 100) con los de media
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ejecutando Avanzar
+###############
+Agregacion
+Media = 417
+Larga = 1600
+Media Muerta = 395
+Diferencia Larga y Media = 1183
+Diferencia Media y Media Muerta = 22
+###############
+###############
+Dispersion
+Media = 301
+Larga = 1467
+Media Muerta = 375
+Diferencia Larga y Media = 1166
+Diferencia Media y Media Muerta = 74
+###############
+###############
+Dispersion
+Media = 300
+Larga = 1382
+Media Muerta = 241
+Diferencia Larga y Media = 1082
+Diferencia Media y Media Muerta = 59
+###############
+Ejecutando Avanzar
+###############
+Agregacion
+Media = 397
+Larga = 1538
+Media Muerta = 499
+Diferencia Larga y Media = 1141
+Diferencia Media y Media Muerta = 102
+###############
+Ejecutando Avanzar
+###############
+Agregacion
+Media = 424
+Larga = 1460
+Media Muerta = 395
+Diferencia Larga y Media = 1036
+Diferencia Media y Media Muerta = 29
+###############
+Ejecutando Avanzar
+Ejecutando Evitar Deadlock
+Ejecutando Avanzar
+Ejecutando Corregir
+Ejecutando Avanzar
+###############
+Dispersion
+Media = 280
+Larga = 900
+Media Muerta = 348
+Diferencia Larga y Media = 620
+Diferencia Media y Media Muerta = 68
+###############
+Ejecutando Avanzar
+###############
+Dispersion
+Media = 355
+Larga = 867
+Media Muerta = 313
+Diferencia Larga y Media = 512
+Diferencia Media y Media Muerta = 42
+###############
+Ejecutando Avanzar
+###############
+Dispersion
+Media = 346
+Larga = 800
+Media Muerta = 320
+Diferencia Larga y Media = 454
+Diferencia Media y Media Muerta = 26
+###############

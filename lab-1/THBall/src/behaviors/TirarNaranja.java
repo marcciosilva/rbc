@@ -35,10 +35,11 @@ public class TirarNaranja extends Suppressable implements Behavior {
 		setSuppressed(false);
 		THBall.timer = System.currentTimeMillis();
 		Movilidad.stopMoving();
-		Movilidad.atrasar(250);
+		Movilidad.atrasar(350);
 		Movilidad.turnTo(gdf, 90.0f, this);
 		Movilidad.avanzar();
-		while ((!leftTouchSensor.isPressed() && !rightTouchSensor.isPressed()) && !getSuppressed())
+		while ((!leftTouchSensor.isPressed() && !rightTouchSensor.isPressed())
+				&& !getSuppressed())
 			;
 		// si el comportamiento no fue suprimido por el evitar deadlock
 		if (!getSuppressed()) {

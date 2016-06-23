@@ -17,7 +17,7 @@ public class Movilidad {
 	 */
 	public static void stopMoving() {
 		try {
-			leftMotor.stop();
+			leftMotor.stop(true);
 			rightMotor.stop();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -195,11 +195,13 @@ public class Movilidad {
 		}
 		while (!caller.getSuppressed()) {
 			anguloActual = Utils.modAngulo(gdf.getMeasurement(true));
-			if (Utils.inRangeAngle(anguloActual, anguloObjetivo, Constants.ERROR_PERMITIDO_ANGULO)) {
+			if (Utils.inRangeAngle(anguloActual, anguloObjetivo,
+					Constants.ERROR_PERMITIDO_ANGULO)) {
 				Movilidad.stopMoving();
 				break;
 			}
-			if ((Utils.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT) && (turnSide != TurnSide.RIGHT)) {
+			if ((Utils.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.RIGHT)
+					&& (turnSide != TurnSide.RIGHT)) {
 				turnSide = TurnSide.RIGHT;
 				Movilidad.turnRight(Constants.SPEED_TURN);
 			} else if ((Utils.FindTurnSide(anguloActual, anguloObjetivo) == TurnSide.LEFT)
