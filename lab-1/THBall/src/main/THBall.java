@@ -1,6 +1,7 @@
 package main;
 
 import lejos.nxt.Button;
+import lejos.nxt.ButtonListener;
 import lejos.nxt.LCD;
 import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
@@ -24,6 +25,7 @@ import behaviors.TirarNaranja;
 public class THBall {
 	public static long timer;
 	private Arbitrator arbitrator;
+	private boolean moveLnrAct = false;
 
 	// sensores
 	public static RemoteNXT remoteNxt;
@@ -90,6 +92,34 @@ public class THBall {
 			sensorLargaDistancia = new SensorSharp(remoteNxt.S2);
 			sensorMediaDistancia = new SensorSharp(remoteNxt.S1);
 			sensorMediaDistanciaMuerta = new SensorSharp(remoteNxt.S3);
+			//inicializacion de actuador lineal
+			if (moveLnrAct) {
+				remoteNxt.C.resetTachoCount();
+				remoteNxt.C.rotate(1000);
+				remoteNxt.C.rotate(1000);
+				// listener para bajar catapulta
+				Button.ESCAPE.addButtonListener(new ButtonListener() {
+					@Override
+					public void buttonReleased(Button b) {
+					}
+
+					@Override
+					public void buttonPressed(Button b) {
+						Movilidad.stopMoving();
+						try {
+							remoteNxt.C.rotate(-1000, false);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						try {
+							remoteNxt.C.rotate(-1000, false);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+					}
+				});
+			}
 		} catch (Exception e) {
 			LCD.clear();
 			LCD.drawString(e.getClass().toString(), 0, 0);
