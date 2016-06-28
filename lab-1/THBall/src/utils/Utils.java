@@ -94,14 +94,22 @@ public class Utils {
 	}
 
 	/**
-	 * Dada una diferencia de medidas entre sensor largo y de media, determina
-	 * si se esta delante de un robot
-	 * 
-	 * @param diferencia
+	 * Determina si hay un robot a una distancia determinada
+	 * @param distancia Distancia consultada
+	 * @param msl Medida de sensor de larga distancia
+	 * @param msm Medida de sensor de distancia media (superior)
+	 * @param msmm Medida de sensor de distancia media (inferior)
 	 * @return
 	 */
-	public static boolean hayRobot(int diferencia) {
-		return diferencia > 400;
+	public static boolean hayRobot(int distancia, int msl, int msm, int msmm) {
+		int diferenciaLargaMedia = Math.abs(msl - msm);
+		int diferenciaSensoresMedia = Math.abs(msm - msmm);
+		return ((Utils.inRange(msm, 300, 20) || Utils.inRange(msmm, 300, 20)) // rango de agregacion
+				&& diferenciaSensoresMedia < 120 // no zona muerta - prueba 1
+//				&& (!Utils.inRange(msl, msm, 100)) // no pared - prueba 2 VIEJO
+				&& (msm < 800) // distancia maxima sin que explote - prueba 3
+				&& (diferenciaLargaMedia >= 500)//prueba 2; NUEVO
+		);
 	}
 
 	public static boolean isColorOrange(Color color) {

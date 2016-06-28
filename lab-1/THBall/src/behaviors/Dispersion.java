@@ -17,6 +17,7 @@ public class Dispersion extends Suppressable implements Behavior {
 	int medidaLarga;
 	int medidaMediaMuerta;
 	int diferenciaSensoresMedia;
+	int diferenciaLargaMedia; //NUEVO
 
 	public Dispersion(SensorSharp sld, SensorSharp smd, SensorSharp smdm) {
 		sensorLargaDistancia = sld;
@@ -30,21 +31,7 @@ public class Dispersion extends Suppressable implements Behavior {
 		medidaMedia = sensorMediaDistancia.getMeasurement(false);
 		medidaLarga = sensorLargaDistancia.getMeasurement(false);
 		medidaMediaMuerta = sensorMediaDistanciaMuerta.getMeasurement(false);
-		diferenciaSensoresMedia = Math.abs(medidaMedia - medidaMediaMuerta);
-
-		// return ((Utils.inRange(medidaMedia, 300, 20) ||
-		// Utils.inRange(medidaMediaMuerta,
-		// 300, 20)) && diferenciaSensoresMedia < 120 && (!Utils.inRange(
-		// medidaLarga, medidaMedia, 100) && !Utils.inRange(medidaLarga,
-		// medidaMediaMuerta, 100)));
-
-		return ((Utils.inRange(medidaMedia, 300, 20) || Utils.inRange(medidaMediaMuerta,
-				300, 20)) // rango de agregacion
-				&& diferenciaSensoresMedia < 120 // no zona muerta
-				&& (!Utils.inRange(medidaLarga, medidaMedia, 100) || !Utils.inRange(
-						medidaLarga, medidaMediaMuerta, 100)) // no pared
-		&& (medidaMedia < 800) // distancia maxima sin que explote - prueba 3
-		);
+		return Utils.hayRobot(300, medidaLarga, medidaMedia, medidaMediaMuerta);
 	}
 
 	@Override

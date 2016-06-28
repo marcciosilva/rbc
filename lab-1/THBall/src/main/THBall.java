@@ -76,9 +76,6 @@ public class THBall {
 		// a mayor indice mayor prioridad
 		Behavior behaviors[] = { avanzar, corregir, avoid, tirarNaranja, tirarAzul,
 				dispersion, agregacion, evitarDeadlock };
-		// DistanceTest distanceTest = new DistanceTest(sensorLargaDistancia,
-		// sensorMediaDistancia, sensorMediaDistanciaMuerta);
-		// Behavior behaviors[] = { dispersion, agregacion };
 		// declaro arbitrator
 		arbitrator = new Arbitrator(behaviors);
 	}
@@ -93,12 +90,6 @@ public class THBall {
 			sensorLargaDistancia = new SensorSharp(remoteNxt.S2);
 			sensorMediaDistancia = new SensorSharp(remoteNxt.S1);
 			sensorMediaDistanciaMuerta = new SensorSharp(remoteNxt.S3);
-			// inicializacion de actuador lineal
-			// remoteNxt.C.resetTachoCount();
-			// // hack
-			// remoteNxt.C.rotate(1000);
-			// remoteNxt.C.rotate(1000);
-			// RConsole.openAny(10000);
 		} catch (Exception e) {
 			LCD.clear();
 			LCD.drawString(e.getClass().toString(), 0, 0);
@@ -109,29 +100,6 @@ public class THBall {
 		gdf = new SensorGDF(SensorPort.S1);
 		Movilidad.resetearCatapulta();
 		Movilidad.bajarCatapulta();
-
-		// // listener para bajar catapulta
-		// Button.ESCAPE.addButtonListener(new ButtonListener() {
-		// @Override
-		// public void buttonReleased(Button b) {
-		// }
-		//
-		// @Override
-		// public void buttonPressed(Button b) {
-		// Movilidad.stopMoving();
-		// try {
-		// remoteNxt.C.rotate(-1000, false);
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-		// try {
-		// remoteNxt.C.rotate(-1000, false);
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-		//
-		// }
-		// });
 	}
 
 }

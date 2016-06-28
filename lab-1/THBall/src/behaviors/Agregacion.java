@@ -17,6 +17,7 @@ public class Agregacion extends Suppressable implements Behavior {
 	int medidaLarga;
 	int medidaMediaMuerta;
 	int diferenciaSensoresMedia;
+	int diferenciaLargaMedia; //NUEVO
 
 	public Agregacion(SensorSharp sld, SensorSharp smd, SensorSharp smdm) {
 		sensorLargaDistancia = sld;
@@ -30,14 +31,7 @@ public class Agregacion extends Suppressable implements Behavior {
 		medidaMedia = sensorMediaDistancia.getMeasurement(true);
 		medidaLarga = sensorLargaDistancia.getMeasurement(true);
 		medidaMediaMuerta = sensorMediaDistanciaMuerta.getMeasurement(true);
-		diferenciaSensoresMedia = Math.abs(medidaMedia - medidaMediaMuerta);
-		return ((Utils.inRange(medidaMedia, 600, 20) || Utils.inRange(medidaMediaMuerta,
-				600, 20)) // rango de agregacion
-				&& diferenciaSensoresMedia < 120 // no zona muerta
-				&& (!Utils.inRange(medidaLarga, medidaMedia, 100) || !Utils.inRange(
-						medidaLarga, medidaMediaMuerta, 100)) // no pared
-		&& (medidaMedia < 800) // distancia maxima sin que explote - prueba 3
-		);
+		return Utils.hayRobot(600, medidaLarga, medidaMedia, medidaMediaMuerta);
 	}
 
 	@Override
@@ -55,9 +49,6 @@ public class Agregacion extends Suppressable implements Behavior {
 		setSuppressed(false);
 		THBall.timer = System.currentTimeMillis();
 		Movilidad.avanzar();
-		// while (!getSuppressed()) {
-		// Thread.yield();
-		// }
 	}
 
 	@Override

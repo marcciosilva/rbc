@@ -2864,7 +2864,7 @@ Para que sea un robot, tiene que haber al menos 500mm de diferencia entre uno de
 
 Para que no sea zona muerta, tienen que haber menos de 120mm de diferencia entre los de media (primera prueba)
 
-Debajo de los 800mm, la diferencia entre la medicion de uno de los de media y el de larga va a ser inferior a los 100mm (tercera prueba)
+Si estoy frente a pared, debajo de los 800mm, la diferencia entre la medicion de uno de los de media y el de larga va a ser inferior a los 100mm (tercera prueba)
 
 Dispersion en 300mm
 Agregacion en 600mm
