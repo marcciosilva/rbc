@@ -42,7 +42,7 @@ public class Movilidad {
 	public static void bajarCatapulta() {
 		try {
 			catapulta.setSpeed(Constants.CATAPULTA_MOVER);
-			catapulta.rotateTo(-190, false);
+			catapulta.rotateTo(-180, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

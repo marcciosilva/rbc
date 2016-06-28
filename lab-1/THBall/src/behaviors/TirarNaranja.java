@@ -44,7 +44,7 @@ public class TirarNaranja extends Suppressable implements Behavior {
 		// si el comportamiento no fue suprimido por el evitar deadlock
 		if (!getSuppressed()) {
 			Movilidad.stopMoving();
-			Movilidad.atrasar(250);
+			Movilidad.atrasar(450);
 			Movilidad.turnTo(gdf, 270.0f, this);
 			Movilidad.tirarPelota();
 		}

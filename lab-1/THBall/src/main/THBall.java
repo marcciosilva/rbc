@@ -5,7 +5,6 @@ import lejos.nxt.LCD;
 import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.comm.Bluetooth;
-import lejos.nxt.comm.RConsole;
 import lejos.nxt.remote.RemoteNXT;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
@@ -99,7 +98,7 @@ public class THBall {
 			// // hack
 			// remoteNxt.C.rotate(1000);
 			// remoteNxt.C.rotate(1000);
-			RConsole.openAny(10000);
+			// RConsole.openAny(10000);
 		} catch (Exception e) {
 			LCD.clear();
 			LCD.drawString(e.getClass().toString(), 0, 0);

@@ -24,7 +24,7 @@ public class TirarAzul extends Suppressable implements Behavior {
 
 	@Override
 	public void action() {
-		Movilidad.atrasar(300);
+		Movilidad.atrasar(450);
 		Movilidad.subirCatapulta();
 		Movilidad.bajarCatapulta();
 	}

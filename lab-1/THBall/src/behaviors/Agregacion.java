@@ -31,11 +31,13 @@ public class Agregacion extends Suppressable implements Behavior {
 		medidaLarga = sensorLargaDistancia.getMeasurement(true);
 		medidaMediaMuerta = sensorMediaDistanciaMuerta.getMeasurement(true);
 		diferenciaSensoresMedia = Math.abs(medidaMedia - medidaMediaMuerta);
-
-		return ((Utils.inRange(medidaMedia, 400, 20) || Utils.inRange(medidaMediaMuerta,
-				400, 20)) && diferenciaSensoresMedia < 120 && (!Utils.inRange(
-				medidaLarga, medidaMedia, 100) && !Utils.inRange(medidaLarga,
-				medidaMediaMuerta, 100)));
+		return ((Utils.inRange(medidaMedia, 600, 20) || Utils.inRange(medidaMediaMuerta,
+				600, 20)) // rango de agregacion
+				&& diferenciaSensoresMedia < 120 // no zona muerta
+				&& (!Utils.inRange(medidaLarga, medidaMedia, 100) || !Utils.inRange(
+						medidaLarga, medidaMediaMuerta, 100)) // no pared
+		&& (medidaMedia < 800) // distancia maxima sin que explote - prueba 3
+		);
 	}
 
 	@Override

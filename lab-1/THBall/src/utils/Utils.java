@@ -68,7 +68,8 @@ public class Utils {
 	 */
 	public static boolean inRange(float valorActual, float valorEsperado, float error) {
 		// true if value is in range of reference
-		return ((valorActual <= valorEsperado + error) && (valorActual >= valorEsperado - error));
+		return ((valorActual <= valorEsperado + error) && (valorActual >= valorEsperado
+				- error));
 	}
 
 	/***
@@ -107,14 +108,14 @@ public class Utils {
 		int r = color.getRed();
 		int g = color.getGreen();
 		int b = color.getBlue();
-		return (r >= 100 && g >= 100 && b >= 40);
+		return (r >= 102 && r <= 153 && g >= 84 && g <= 134 && b >= 37 && b <= 200);
 	}
 
 	public static boolean isColorBlue(Color color) {
 		int r = color.getRed();
 		int g = color.getGreen();
 		int b = color.getBlue();
-		return (r >= 75 && g <= 55 && b >= 65);
+		return (r >= 74 && r <= 97 && g >= 27 && g <= 45 && b >= 55 && b <= 82);
 	}
 
 }
