@@ -1,6 +1,5 @@
 package behaviors;
 
-import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
 import sensors.SensorGDF;
@@ -23,7 +22,6 @@ public class EvitarDeadlock extends Suppressable implements Behavior {
 
 	@Override
 	public void action() {
-		RConsole.println("Ejecutando Evitar Deadlock");
 		setSuppressed(false);
 		Movilidad.stopMoving();
 		Movilidad.atrasar((int) (Math.random() * 1750 + 250));

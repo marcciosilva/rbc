@@ -1,7 +1,6 @@
 package behaviors;
 
 import lejos.nxt.TouchSensor;
-import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
 import utils.Constants;
@@ -21,7 +20,6 @@ public class Corregir implements Behavior {
 	@Override
 	public void action() {
 		try {
-			RConsole.println("Ejecutando Corregir");
 			THBall.timer = System.currentTimeMillis();
 			if (leftTouchSensor.isPressed() && !rightTouchSensor.isPressed()) {
 				// desviado a la derecha

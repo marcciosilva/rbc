@@ -14,7 +14,6 @@ public class TirarNaranja extends Suppressable implements Behavior {
 	SensorColor colorSensor;
 	static TouchSensor leftTouchSensor = THBall.leftTouchSensor;
 	static TouchSensor rightTouchSensor = THBall.rightTouchSensor;
-	static int error = 5;
 	private SensorGDF gdf;
 
 	public TirarNaranja(SensorColor cs, SensorGDF gdf) {

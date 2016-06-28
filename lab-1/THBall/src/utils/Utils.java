@@ -104,11 +104,10 @@ public class Utils {
 	public static boolean hayRobot(int distancia, int msl, int msm, int msmm) {
 		int diferenciaLargaMedia = Math.abs(msl - msm);
 		int diferenciaSensoresMedia = Math.abs(msm - msmm);
-		return ((Utils.inRange(msm, 300, 20) || Utils.inRange(msmm, 300, 20)) // rango de agregacion
+		return ((inRange(msm, distancia, 20) || inRange(msmm, distancia, 20))
 				&& diferenciaSensoresMedia < 120 // no zona muerta - prueba 1
-//				&& (!Utils.inRange(msl, msm, 100)) // no pared - prueba 2 VIEJO
-				&& (msm < 800) // distancia maxima sin que explote - prueba 3
-				&& (diferenciaLargaMedia >= 500)//prueba 2; NUEVO
+				&& (msm < 800) // distancia maxima confiable - prueba 3
+				&& (diferenciaLargaMedia >= 500)//prueba 2
 		);
 	}
 

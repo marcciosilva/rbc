@@ -9,7 +9,6 @@ import utils.Utils;
 public class TirarAzul extends Suppressable implements Behavior {
 
 	SensorColor colorSensor;
-	static int error = 5;
 
 	public TirarAzul(SensorColor cs) {
 		colorSensor = cs;

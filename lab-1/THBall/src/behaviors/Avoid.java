@@ -1,7 +1,6 @@
 package behaviors;
 
 import lejos.nxt.TouchSensor;
-import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
 import sensors.SensorGDF;
@@ -26,7 +25,6 @@ public class Avoid extends Suppressable implements Behavior {
 
 	@Override
 	public void action() {
-		RConsole.println("Ejecutando Avoid");
 		THBall.timer = System.currentTimeMillis();
 		setSuppressed(false);
 		Movilidad.stopMoving();

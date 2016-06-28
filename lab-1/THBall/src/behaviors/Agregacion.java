@@ -1,6 +1,5 @@
 package behaviors;
 
-import lejos.nxt.comm.RConsole;
 import lejos.robotics.subsumption.Behavior;
 import main.THBall;
 import sensors.SensorSharp;
@@ -13,11 +12,6 @@ public class Agregacion extends Suppressable implements Behavior {
 	SensorSharp sensorLargaDistancia;
 	SensorSharp sensorMediaDistancia;
 	SensorSharp sensorMediaDistanciaMuerta;
-	int medidaMedia;
-	int medidaLarga;
-	int medidaMediaMuerta;
-	int diferenciaSensoresMedia;
-	int diferenciaLargaMedia; //NUEVO
 
 	public Agregacion(SensorSharp sld, SensorSharp smd, SensorSharp smdm) {
 		sensorLargaDistancia = sld;
@@ -28,24 +22,14 @@ public class Agregacion extends Suppressable implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		medidaMedia = sensorMediaDistancia.getMeasurement(true);
-		medidaLarga = sensorLargaDistancia.getMeasurement(true);
-		medidaMediaMuerta = sensorMediaDistanciaMuerta.getMeasurement(true);
-		return Utils.hayRobot(600, medidaLarga, medidaMedia, medidaMediaMuerta);
+		return Utils.hayRobot(600, 
+				sensorLargaDistancia.getMeasurement(false), 
+				sensorMediaDistancia.getMeasurement(false), 
+				sensorMediaDistanciaMuerta.getMeasurement(false));
 	}
 
 	@Override
 	public void action() {
-		RConsole.println("###############");
-		RConsole.println("Agregacion");
-		RConsole.println("Media = " + Integer.toString(medidaMedia));
-		RConsole.println("Larga = " + Integer.toString(medidaLarga));
-		RConsole.println("Media Muerta = " + Integer.toString(medidaMediaMuerta));
-		RConsole.println("Diferencia Larga y Media = "
-				+ Integer.toString(Math.abs(medidaMedia - medidaLarga)));
-		RConsole.println("Diferencia Media y Media Muerta = "
-				+ Integer.toString(Math.abs(medidaMedia - medidaMediaMuerta)));
-		RConsole.println("###############");
 		setSuppressed(false);
 		THBall.timer = System.currentTimeMillis();
 		Movilidad.avanzar();
